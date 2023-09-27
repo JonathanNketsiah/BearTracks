@@ -1,20 +1,20 @@
-import Login from './components/Login'
-import SignUp from './components/SignUp'
-import { Route, Routes } from 'react-router-dom'
-import LandingPage from './components/LandingPage'
-import ProtectedRoutes from './ProtectedRoute'
+import React, { Component } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import AppRoutes from './AppRoutes';
+import { Layout } from './components/Layout';
+import './custom.css'
 
 function App() {
 
 
     return (
-        <>
-            <Routes>
-                <Route path='/' element={<Login/>} />  
-                <Route path='/signUp' element={<SignUp />} />
-                <Route path='/LandingPage' element={<LandingPage/>} />
-                <Route element={<ProtectedRoutes/> } >
-                </Route>
+      <Layout>
+        <Routes>
+          {AppRoutes.map((route, index) => {
+            const { element, ...rest } = route;
+            return <Route key={index} {...rest} element={element} />;
+          })}
+                <Route path="/location-check" element={<LocationCheck />} />
             </Routes>
         </>
     )
