@@ -1,39 +1,27 @@
 ﻿using BearTracks.SQLite;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace BearTracks.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HighScoreController : ControllerBase
+    public class LoginController : ControllerBase
     {
-        private readonly ILogger<HighScoreController> _logger;
+        private readonly ILogger<LoginController> _logger;
         private dB_Handler _handler;
 
-        public HighScoreController(ILogger<HighScoreController> logger)
+        public LoginController(ILogger<LoginController> logger)
         {
             _logger = logger;
             _handler = new dB_Handler();
             _handler.Setup();
         }
 
-        [HttpGet]
-        public IEnumerable<HighScore> Get()
+        [HttpGet("login")]
+        public IEnumerable<LoginCreds> Login(string email, string password)
         {
-            return _handler.GetScoreData();
+            return _handler.LoginUser(email, password);
         }
 
-        [HttpGet("delete")]
-        public ActionResult<bool> Delete()
-        {
-            return _handler.DeleteTheScores();
-        }
-
-        [HttpGet("add")]
-        public void Add()
-        {
-            _handler.addScore();
-        }
     }
 }

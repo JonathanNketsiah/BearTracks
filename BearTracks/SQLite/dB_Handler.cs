@@ -7,7 +7,7 @@ namespace BearTracks.SQLite
     {
         private const string DB_NAME = "MyDatabase.sqlite";
         private const string CONNECTION_STRING = "Data Source=MyDatabase.sqlite;Version=3;";
-        private const string TABLE_NAME = "highscores";
+        private const string TABLE_NAME = "users";
 
         private SQLiteConnection m_dbConnection;
 
@@ -63,33 +63,17 @@ namespace BearTracks.SQLite
             return score;
         }
 
-        public IEnumerable<HighScore> GetScoreData()
+        public int LoginUser(string email, string password)
         {   
-            List<HighScore> scores = new List<HighScore>();
-
             using (var connection = new SQLiteConnection(CONNECTION_STRING))
             {
                 connection.Open();
-                using (var command = new SQLiteCommand($"SELECT * FROM {TABLE_NAME} ORDER BY SCORE DESC", connection))
+                using (var command = new SQLiteCommand($"Insert into {TABLE_NAME}(email, password) values ({email}, {password})", connection))
                 {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var score = new HighScore
-                            {
-                                Name = reader["name"].ToString(),
-                                Score = reader["score"].ToString()
-                            };
-
-                            scores.Add(score);
-                        }
-                    }
+                    var result = command.ExecuteNonQuery();
+                    return result;
                 }
             }
-
-            var x = scores.AsEnumerable<HighScore>();
-            return x;
         }
 
         public bool DeleteTheScores()
