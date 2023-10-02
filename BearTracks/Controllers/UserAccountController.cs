@@ -17,11 +17,18 @@ namespace BearTracks.Controllers
             _handler.Setup();
         }
 
-        [HttpGet("login")]
-        public IEnumerable<LoginCreds> Login(string email, string password)
+        [HttpPost("login")]
+        public bool Login([FromBody] LoginModel model)
         {
-            return _handler.LoginUser(email, password);
+            var x =_handler.LoginUser(model.Email, model.Password);
+            //For now, this will return a success (true) for any input given, but its a start
+            return x;
         }
 
+        public class LoginModel
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
     }
 }
