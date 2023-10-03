@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace BearTracks.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class LoginController : ControllerBase
+    [Route("account")]
+    public class UserAccountController : ControllerBase
     {
-        private readonly ILogger<LoginController> _logger;
+        private readonly ILogger<UserAccountController> _logger;
         private dB_Handler _handler;
 
-        public LoginController(ILogger<LoginController> logger)
+        public UserAccountController(ILogger<UserAccountController> logger)
         {
             _logger = logger;
             _handler = new dB_Handler();
@@ -18,7 +18,7 @@ namespace BearTracks.Controllers
         }
 
         [HttpPost("login")]
-        public bool Login([FromBody] LoginModel model)
+        public IActionResult Login([FromBody] LoginModel model)
         {
             var x =_handler.LoginUser(model.Email, model.Password);
             //For now, this will return a success (true) for any input given, but its a start

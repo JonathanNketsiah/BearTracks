@@ -13,7 +13,7 @@ const Login = () => {
         const password = passwordScn2.current.value;
 
         try {
-            const response = await fetch('login/login', {
+            const response = await fetch('account/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,15 +23,15 @@ const Login = () => {
                     password: password  // replace with your actual data
                 })
             });
-            const data = await response.json(); // parse JSON from response
-            console.log(data);
+            //const data = await response.json(); // parse JSON from response
+            //console.log(data);
 
             // Check if login was successful, then redirect
             if (response.ok) {
                 window.location.href = '/LandingPage'; // replace with your actual landing page URL
             }
             else {
-                console.error(data);
+                console.error("Login Failed");
                 // Handle your error here
             }
         } catch (error) {

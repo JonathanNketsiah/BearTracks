@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Data.SQLite;
 
 namespace BearTracks.SQLite
@@ -40,16 +41,17 @@ namespace BearTracks.SQLite
             command.ExecuteNonQuery();
         }
 
-        public bool LoginUser(string email, string password)
+        public IActionResult LoginUser(string email, string password)
         {   
             using (var connection = new SQLiteConnection(CONNECTION_STRING))
             {
                 connection.Open();
-                using (var command = new SQLiteCommand($"Insert into {TABLE_NAME}(email, password) values ('{email}', '{password}')", connection))
+                using (var command = new SQLiteCommand($"Select count(*) from {TABLE_NAME} where email = '{email}' and password = '{password}'", connection))
                 {
-                    var result = command.ExecuteNonQuery();
-                    return result > 0 ? true : false;
-                        
+                    var result = (Int64)command.ExecuteScalar();
+                    
+                    return result > 0 ? new OkResult() : new NotFoundResult();
+
 
                 }
             }
