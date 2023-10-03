@@ -19,8 +19,6 @@ namespace BearTracks.SQLite
             {
                 SQLiteConnection.CreateFile(DB_NAME);
             }
-
-
             m_dbConnection = new SQLiteConnection(CONNECTION_STRING);
         }
 
@@ -42,17 +40,23 @@ namespace BearTracks.SQLite
         }
 
         public IActionResult LoginUser(string email, string password)
-        {   
+        {
             using (var connection = new SQLiteConnection(CONNECTION_STRING))
             {
+                string query = $"SELECT COUNT(*) FROM {TABLE_NAME} where email = @email and password = @password";
+
                 connection.Open();
-                using (var command = new SQLiteCommand($"Select count(*) from {TABLE_NAME} where email = '{email}' and password = '{password}'", connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
-                    var result = (Int64)command.ExecuteScalar();
+                    //Add the parameters below provides rudimentary screening for things like sql injection
+                    command.Parameters.Add(new SQLiteParameter("@email", email));
+                    command.Parameters.Add(new SQLiteParameter("@password", password));
                     
-                    return result > 0 ? new OkResult() : new NotFoundResult();
-
-
+                    var result = (Int64)command.ExecuteScalar();
+                    //Checks if there is a result of 1 registered user. If so
+                    //it returns an ok response; if not, a not found error 
+                    //which can trigger a response on the login page
+                    return result == 1 ? new OkResult() : new NotFoundResult();
                 }
             }
         }
