@@ -48,7 +48,7 @@ export class FetchData extends Component {
   }
 
   async populateWeatherData() {
-    const response = await fetch('highscore');
+    const response = await fetch('login/login');
     const data = await response.json();
     this.setState({ scores: data, loading: false });
   }

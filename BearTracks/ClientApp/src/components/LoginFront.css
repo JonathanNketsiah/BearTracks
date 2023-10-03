@@ -1,0 +1,106 @@
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+/*
+  2. Remove default margin
+*/
+* {
+    margin: 0;
+}
+/*
+  Typographic tweaks!
+  3. Add accessible line-height
+  4. Improve text rendering
+*/
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1.3rem;
+}
+/*
+  5. Improve media defaults
+*/
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+/*
+  6. Remove built-in form typography styles
+*/
+input, button, textarea, select {
+    font: inherit;
+}
+/*
+  7. Avoid text overflows
+*/
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+/*
+  8. Create a root stacking context
+*/
+#root, #__next {
+    isolation: isolate;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+    .container > h1 {
+        text-align: center;
+    }
+
+.input-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+input[type=text], input[type=password] {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.input-wrapper > button {
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-top: 10px;
+   background-color: rgb(10, 50, 119);
+    color: whitesmoke;
+}
+
+    .input-wrapper > button:hover {
+        cursor: pointer;
+        background-color: rgb(14, 72, 181);
+    }
+
+.links-wrap {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 15px;
+}
+
+    .links-wrap > a:hover {
+        color: rgb(110, 69, 146);
+        
+    }

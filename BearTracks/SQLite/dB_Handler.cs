@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Data.SQLite;
 
 namespace BearTracks.SQLite
@@ -7,7 +8,7 @@ namespace BearTracks.SQLite
     {
         private const string DB_NAME = "MyDatabase.sqlite";
         private const string CONNECTION_STRING = "Data Source=MyDatabase.sqlite;Version=3;";
-        private const string TABLE_NAME = "highscores";
+        private const string TABLE_NAME = "users";
 
         private SQLiteConnection m_dbConnection;
 
@@ -18,8 +19,6 @@ namespace BearTracks.SQLite
             {
                 SQLiteConnection.CreateFile(DB_NAME);
             }
-
-
             m_dbConnection = new SQLiteConnection(CONNECTION_STRING);
         }
 
@@ -35,94 +34,31 @@ namespace BearTracks.SQLite
 
             String sql = String.Empty;
             SQLiteCommand? command;
-            sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (name varchar (20), score int)";
+            sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (email varchar (50), password varchar(50))";
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
         }
 
-        public int GetNewHighScore(SQLiteConnection connection)
-        {
-            int score = 0;
-            string query = "select max(score) from highscores; ";
-
-            using (SQLiteCommand command = new SQLiteCommand(query, connection))
-            {
-                var result = command.ExecuteScalar();
-                if(result == DBNull.Value)
-                {
-                    result = 0;
-                }
-                else
-                {
-                    score = Convert.ToInt32(result);
-                }
-                Random rand = new Random();
-                int randomNumber = rand.Next(1, 501);
-                score = score + randomNumber;
-            }
-            return score;
-        }
-
-        public IEnumerable<HighScore> GetScoreData()
-        {   
-            List<HighScore> scores = new List<HighScore>();
-
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
-            {
-                connection.Open();
-                using (var command = new SQLiteCommand($"SELECT * FROM {TABLE_NAME} ORDER BY SCORE DESC", connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var score = new HighScore
-                            {
-                                Name = reader["name"].ToString(),
-                                Score = reader["score"].ToString()
-                            };
-
-                            scores.Add(score);
-                        }
-                    }
-                }
-            }
-
-            var x = scores.AsEnumerable<HighScore>();
-            return x;
-        }
-
-        public bool DeleteTheScores()
+        public IActionResult LoginUser(string email, string password)
         {
             using (var connection = new SQLiteConnection(CONNECTION_STRING))
             {
+                string query = $"SELECT COUNT(*) FROM {TABLE_NAME} where email = @email and password = @password";
+
                 connection.Open();
-                using (var command = new SQLiteCommand($"DELETE FROM {TABLE_NAME}", connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
-                    var result = command.ExecuteNonQuery();
-                    if (result >= 1)
-                    {
-                        return true;
-                    }
-                    else return false;
+                    //Add the parameters below provides rudimentary screening for things like sql injection
+                    command.Parameters.Add(new SQLiteParameter("@email", email));
+                    command.Parameters.Add(new SQLiteParameter("@password", password));
+                    
+                    var result = (Int64)command.ExecuteScalar();
+                    //Checks if there is a result of 1 registered user. If so
+                    //it returns an ok response; if not, a not found error 
+                    //which can trigger a response on the login page
+                    return result == 1 ? new OkResult() : new NotFoundResult();
                 }
             }
         }
-
-        public void addScore()
-        {
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
-            {
-                String sql = $"Insert into {TABLE_NAME} (name, score) values ('Player1', {GetNewHighScore(m_dbConnection)})";
-                connection.Open();
-
-                using (var command = new SQLiteCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-                m_dbConnection.Close();
-            }
-        }
-
     }
 }
