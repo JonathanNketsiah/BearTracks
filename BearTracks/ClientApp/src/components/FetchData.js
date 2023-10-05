@@ -1,55 +1,57 @@
-import React, { Component } from 'react';
+//TODO Delete later; using for referenc now
 
-export class FetchData extends Component {
-  static displayName = FetchData.name;
+//import React, { Component } from 'react';
 
-  constructor(props) {
-    super(props);
-    this.state = { scores: [], loading: true };
-  }
+//export class FetchData extends Component {
+//  static displayName = FetchData.name;
 
-  componentDidMount() {
-    this.populateWeatherData();
-  }
+//  constructor(props) {
+//    super(props);
+//    this.state = { scores: [], loading: true };
+//  }
 
-  static renderForecastsTable(scores) {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scores.map(score =>
-            <tr key={score.name}>
-              <td>{score.name}</td>
-              <td>{score.score}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
-  }
+//  componentDidMount() {
+//    this.populateWeatherData();
+//  }
 
-  render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.scores);
+//  static renderForecastsTable(scores) {
+//    return (
+//      <table className='table table-striped' aria-labelledby="tabelLabel">
+//        <thead>
+//          <tr>
+//            <th>Player</th>
+//            <th>Score</th>
+//          </tr>
+//        </thead>
+//        <tbody>
+//          {scores.map(score =>
+//            <tr key={score.name}>
+//              <td>{score.name}</td>
+//              <td>{score.score}</td>
+//            </tr>
+//          )}
+//        </tbody>
+//      </table>
+//    );
+//  }
 
-    return (
-      <div>
-        <h1 id="tabelLabel" >Player Scores</h1>
-        <p>This component demonstrates fetching data from the database which is access-controlled by the server.</p>
-        {contents}
-      </div>
-    );
-  }
+//  render() {
+//    let contents = this.state.loading
+//      ? <p><em>Loading...</em></p>
+//      : FetchData.renderForecastsTable(this.state.scores);
 
-  async populateWeatherData() {
-    const response = await fetch('login/login');
-    const data = await response.json();
-    this.setState({ scores: data, loading: false });
-  }
-}
+//    return (
+//      <div>
+//        <h1 id="tabelLabel" >Player Scores</h1>
+//        <p>This component demonstrates fetching data from the database which is access-controlled by the server.</p>
+//        {contents}
+//      </div>
+//    );
+//  }
+
+//  async populateWeatherData() {
+//    const response = await fetch('login/login');
+//    const data = await response.json();
+//    this.setState({ scores: data, loading: false });
+//  }
+//}

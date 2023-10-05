@@ -1,4 +1,5 @@
-﻿using BearTracks.SQLite;
+﻿using BearTracks.Models;
+using BearTracks.SQLite;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BearTracks.Controllers
@@ -18,17 +19,16 @@ namespace BearTracks.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel model)
+        public IActionResult Login([FromBody] LoginModelDTO model)
         {
-            var x =_handler.LoginUser(model.Email, model.Password);
-            //For now, this will return a success (true) for any input given, but its a start
-            return x;
+            return _handler.LoginUser(model.Email.ToLower(), model.Password);
+            
         }
 
-        public class LoginModel
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] LoginModelDTO model)
         {
-            public string Email { get; set; }
-            public string Password { get; set; }
+            return _handler.CreateUser(model.Email.ToLower(), model.Password);
         }
     }
 }

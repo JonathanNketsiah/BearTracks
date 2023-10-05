@@ -1,16 +1,41 @@
 import React, { useRef } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import './LoginFront.css'
 
 
 const SignUp = () => {
-    const emailScn = useRef(null);
-    const passwordScn = useRef(null);
-    const navigate = useNavigate();
+    const _emailScn = useRef(null);
+    const _passwordScn = useRef(null);
+    
+    const handleSignUp = async (event) => {
+        event.preventDefault();
+        const _email = _emailScn.current.value;
+        const _password = _passwordScn.current.value;
 
-    const handleSignUp = (e) => {
-        e.preventDefault();
-        navigate('/')
+        try {
+            const response = await fetch('account/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: _email, 
+                    password: _password  
+                })
+            });
+            
+            // Check if aacount creation was successful, then redirect if not
+            if (response.ok) {
+                window.location.href = '/LandingPage'; // replace with your actual landing page URL
+            }
+            else {
+                console.error("Login Failed");
+                // Handle your error here
+            }
+        } catch (error) {
+            console.error(error);
+            // Handle your error here
+        }
     }
 
 
@@ -20,11 +45,10 @@ const SignUp = () => {
 
             <form className='input-wrapper' onSubmit = {handleSignUp} >
                 <label>Enter Email</label>
-                <input type='text' ref={emailScn} placeholder='email' />
+                <input type='text' ref={_emailScn} placeholder='email' />
                 <label>Enter Password</label>
-                <input type='password' ref={passwordScn} placeholder='password' autoComplete="off" />
-                <button>SignUp</button>
-
+                <input type='password' ref={_passwordScn} placeholder='password' autoComplete="off" />
+                <button>Sign Up</button>
             </form>
 
             <div className='links-wrap'>
