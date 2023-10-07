@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BearTracks.Models.UserAccount;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
 
-namespace BearTracks.SQLite
+namespace BearTracks.Databases
 {
-    public class dB_Handler
+    public class dB_Handler_Sqlite : IdB_Handler
     {
         private const string DB_NAME = "MyDatabase.sqlite";
         private const string CONNECTION_STRING = "Data Source=MyDatabase.sqlite;Version=3;";
@@ -15,33 +16,26 @@ namespace BearTracks.SQLite
         //but adding this to prevent any other direct calls to the API
         private const string PATTERN = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
         private Regex REGEX = new Regex(PATTERN);
-        private SQLiteConnection m_dbConnection;
+        
 
-
-        public dB_Handler()
+        public dB_Handler_Sqlite()
         {
             if (!File.Exists(DB_NAME))
             {
                 SQLiteConnection.CreateFile(DB_NAME);
             }
-            m_dbConnection = new SQLiteConnection(CONNECTION_STRING);
+            Setup();
         }
 
         public void Setup()
         {
-            // This creates a zero-byte file
-
-            m_dbConnection.Open();
-
-            // varchar will likely be handled internally as TEXT
-            // the (20) will be ignored
-            // see https://www.sqlite.org/datatype3.html
-
-            String sql = String.Empty;
-            SQLiteCommand? command;
-            sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (email varchar (50), password varchar(50))";
-            command = new SQLiteCommand(sql, m_dbConnection);
-            command.ExecuteNonQuery();
+            using (var connection = new SQLiteConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), password varchar(50))";
+                var command = new SQLiteCommand(sql, connection);
+                command.ExecuteNonQuery();
+            }
         }
 
         public IActionResult LoginUser(string email, string password)
@@ -62,7 +56,7 @@ namespace BearTracks.SQLite
                         command.Parameters.Add(new SQLiteParameter("@email", email));
                         command.Parameters.Add(new SQLiteParameter("@password", password));
 
-                        var result = (Int64)command.ExecuteScalar();
+                        var result = (long)command.ExecuteScalar();
                         //Checks if there is a result of 1 registered user. If so
                         //it returns an ok response; if not, a not found error 
                         //which can trigger a response on the login page
@@ -74,27 +68,30 @@ namespace BearTracks.SQLite
         }
 
 
-        public IActionResult CreateUser(string email, string password)
+        public IActionResult CreateUser(CreateModelDTO cModel)
         {
 
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
-            if (REGEX.IsMatch(email))
+            if (REGEX.IsMatch(cModel.Email))
             {
                 using (var connection = new SQLiteConnection(CONNECTION_STRING))
                 {
-                    string query = $"INSERT INTO {TABLE_NAME}(email, password) " +
-                    $"SELECT LOWER(@email), @password " +
+                    string query = $"INSERT INTO {TABLE_NAME}(firstname, lastname, email, username, password) " +
+                    $"SELECT @firstname, @lastname, LOWER(@email), @username, @password " +
                     $"WHERE NOT EXISTS (SELECT 1 FROM {TABLE_NAME} WHERE LOWER(email) = @email)";
 
                     connection.Open();
                     using (var command = new SQLiteCommand(query, connection))
                     {
                         //Add the parameters below provides rudimentary screening for things like sql injection
-                        command.Parameters.Add(new SQLiteParameter("@email", email));
-                        command.Parameters.Add(new SQLiteParameter("@password", password));
+                        command.Parameters.Add(new SQLiteParameter("@firstname", cModel.FirstName));
+                        command.Parameters.Add(new SQLiteParameter("@lastname", cModel.LastName));
+                        command.Parameters.Add(new SQLiteParameter("@email", cModel.Email));
+                        command.Parameters.Add(new SQLiteParameter("@username", cModel.UserName));
+                        command.Parameters.Add(new SQLiteParameter("@password", cModel.Password));
 
-                        var result = (Int64)command.ExecuteNonQuery();
+                        var result = (long)command.ExecuteNonQuery();
                         //Checks if there is a result of 1 registered user. If so
                         //it returns an ok response; if not, a not found error 
                         //which can trigger a response on the login page

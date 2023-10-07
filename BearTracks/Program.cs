@@ -1,4 +1,5 @@
-using BearTracks.SQLite;
+using BearTracks.Bootstrapper;
+using BearTracks.Databases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+//This bootstrapper allows easy one stop register of all injectable classes
+Bootstrapper.Initialize(builder);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

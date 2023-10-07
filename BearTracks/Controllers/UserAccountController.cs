@@ -1,5 +1,5 @@
-﻿using BearTracks.Models;
-using BearTracks.SQLite;
+﻿using BearTracks.Databases;
+using BearTracks.Models.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BearTracks.Controllers
@@ -9,13 +9,12 @@ namespace BearTracks.Controllers
     public class UserAccountController : ControllerBase
     {
         private readonly ILogger<UserAccountController> _logger;
-        private dB_Handler _handler;
+        private IdB_Handler _handler;
 
-        public UserAccountController(ILogger<UserAccountController> logger)
+        public UserAccountController(ILogger<UserAccountController> logger, IdB_Handler handler)
         {
             _logger = logger;
-            _handler = new dB_Handler();
-            _handler.Setup();
+            _handler = handler;
         }
 
         [HttpPost("login")]
@@ -26,9 +25,9 @@ namespace BearTracks.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] LoginModelDTO model)
+        public IActionResult Create([FromBody] CreateModelDTO model)
         {
-            return _handler.CreateUser(model.Email.ToLower(), model.Password);
+            return _handler.CreateUser(model);
         }
     }
 }
