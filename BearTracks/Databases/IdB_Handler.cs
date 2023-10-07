@@ -6,7 +6,7 @@ namespace BearTracks.Databases
     public interface IdB_Handler
     {
         void Setup();
-        IActionResult LoginUser(string email, string password);
+        IActionResult LoginUser(LoginModelDTO lModel);
         IActionResult CreateUser(CreateModelDTO cModel);
     }
 }

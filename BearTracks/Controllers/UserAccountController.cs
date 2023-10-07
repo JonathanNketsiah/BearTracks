@@ -20,7 +20,7 @@ namespace BearTracks.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModelDTO model)
         {
-            return _handler.LoginUser(model.Email.ToLower(), model.Password);
+            return _handler.LoginUser(model);
             
         }
 

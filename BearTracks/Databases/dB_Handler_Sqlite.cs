@@ -38,11 +38,11 @@ namespace BearTracks.Databases
             }
         }
 
-        public IActionResult LoginUser(string email, string password)
+        public IActionResult LoginUser(LoginModelDTO lModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
-            if (REGEX.IsMatch(email))
+            if (REGEX.IsMatch(lModel.Email))
             {
                 using (var connection = new SQLiteConnection(CONNECTION_STRING))
                 {
@@ -53,8 +53,8 @@ namespace BearTracks.Databases
                     using (var command = new SQLiteCommand(query, connection))
                     {
                         //Add the parameters below provides rudimentary screening for things like sql injection
-                        command.Parameters.Add(new SQLiteParameter("@email", email));
-                        command.Parameters.Add(new SQLiteParameter("@password", password));
+                        command.Parameters.Add(new SQLiteParameter("@email", lModel.Email));
+                        command.Parameters.Add(new SQLiteParameter("@password", lModel.Password));
 
                         var result = (long)command.ExecuteScalar();
                         //Checks if there is a result of 1 registered user. If so
