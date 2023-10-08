@@ -4,13 +4,13 @@ import './LoginFront.css'
 
 
 const Login = () => {
-    const emailScn2 = useRef();
-    const passwordScn2 = useRef();
+    const _emailScn2 = useRef();
+    const _passwordScn2 = useRef();
     
     const handleIn = async (event) => {
         event.preventDefault();
-        const email = emailScn2.current.value;
-        const password = passwordScn2.current.value;
+        const _email = _emailScn2.current.value;
+        const _password = _passwordScn2.current.value;
 
         try {
             const response = await fetch('account/login', {
@@ -19,13 +19,11 @@ const Login = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: email, // replace with your actual data
-                    password: password  // replace with your actual data
+                    email: _email, 
+                    password: _password  
                 })
             });
-            //const data = await response.json(); // parse JSON from response
-            //console.log(data);
-
+            
             // Check if login was successful, then redirect
             if (response.ok) {
                 window.location.href = '/LandingPage'; // replace with your actual landing page URL
@@ -47,9 +45,9 @@ const Login = () => {
                 <h2>Login</h2>
                 <form className='input-wrapper' onSubmit={handleIn}>
                     <label>Enter Email</label>
-                    <input type='text' ref={emailScn2} placeholder='email' />
+                    <input type='text' ref={_emailScn2} placeholder='email' />
                     <label>Enter Password</label>
-                    <input type='password' ref={passwordScn2} placeholder='password' autoComplete='off' />
+                    <input type='password' ref={_passwordScn2} placeholder='password' autoComplete='off' />
                     <button>Login</button>
                 </form>
                 <div className='links-wrap'>
