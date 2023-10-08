@@ -1,5 +1,5 @@
-﻿using BearTracks.Databases;
-using BearTracks.Models.UserAccount;
+﻿using BearTracks.CoreLibrary.Models.UserAccount;
+using BearTracks.CoreLibrary.Databases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BearTracks.Controllers
@@ -9,9 +9,9 @@ namespace BearTracks.Controllers
     public class UserAccountController : ControllerBase
     {
         private readonly ILogger<UserAccountController> _logger;
-        private IdB_Handler _handler;
+        private IDatabaseService _handler;
 
-        public UserAccountController(ILogger<UserAccountController> logger, IdB_Handler handler)
+        public UserAccountController(ILogger<UserAccountController> logger, IDatabaseService handler)
         {
             _logger = logger;
             _handler = handler;

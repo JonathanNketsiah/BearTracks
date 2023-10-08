@@ -1,5 +1,4 @@
 using BearTracks.Bootstrapper;
-using BearTracks.Databases;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-﻿namespace BearTracks.Models.UserAccount
+﻿namespace BearTracks.CoreLibrary.Models.UserAccount
 {
     public class LoginModelDTO
     {

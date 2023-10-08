@@ -1,25 +1,24 @@
-﻿using BearTracks.Models.UserAccount;
+﻿using BearTracks.CoreLibrary.Models.UserAccount;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
 
-namespace BearTracks.Databases
+namespace BearTracks.CoreLibrary.Databases
 {
-    public class dB_Handler_Sqlite : IdB_Handler
+    public class SqliteDatabaseService : IDatabaseService
     {
         private const string DB_NAME = "MyDatabase.sqlite";
-        private const string CONNECTION_STRING = "Data Source=MyDatabase.sqlite;Version=3;";
         private const string TABLE_NAME = "users";
         //REGEX PATTERN for email address
         //This check needs to occur in the View as well,
         //but adding this to prevent any other direct calls to the API
         private const string PATTERN = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
         private Regex REGEX = new Regex(PATTERN);
-        
+        private string ConnectionString;
 
-        public dB_Handler_Sqlite()
+        public SqliteDatabaseService(string connectionString)
         {
+            ConnectionString = connectionString;
             if (!File.Exists(DB_NAME))
             {
                 SQLiteConnection.CreateFile(DB_NAME);
@@ -29,7 +28,7 @@ namespace BearTracks.Databases
 
         public void Setup()
         {
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
                 var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), password varchar(50))";
@@ -44,7 +43,7 @@ namespace BearTracks.Databases
             //TODO Determine password pattern to prevent injection
             if (REGEX.IsMatch(lModel.Email))
             {
-                using (var connection = new SQLiteConnection(CONNECTION_STRING))
+                using (var connection = new SQLiteConnection(ConnectionString))
                 {
 
                     string query = $"SELECT COUNT(*) FROM {TABLE_NAME} WHERE LOWER(email) = @email AND password = @password";
@@ -75,7 +74,7 @@ namespace BearTracks.Databases
             //TODO Determine password pattern to prevent injection
             if (REGEX.IsMatch(cModel.Email))
             {
-                using (var connection = new SQLiteConnection(CONNECTION_STRING))
+                using (var connection = new SQLiteConnection(ConnectionString))
                 {
                     string query = $"INSERT INTO {TABLE_NAME}(firstname, lastname, email, username, password) " +
                     $"SELECT @firstname, @lastname, LOWER(@email), @username, @password " +

@@ -1,4 +1,4 @@
-﻿using BearTracks.Databases;
+﻿using BearTracks.CoreLibrary.Databases;
 
 namespace BearTracks.Bootstrapper
 {
@@ -6,7 +6,8 @@ namespace BearTracks.Bootstrapper
     {
         public static void Initialize(WebApplicationBuilder builder)
         {
-            builder.Services.AddTransient<IdB_Handler, dB_Handler_Sqlite>();
+            builder.Services.AddTransient<DatabaseServiceFactory>();
+            builder.Services.AddScoped<IDatabaseService>(provider => provider.GetRequiredService<DatabaseServiceFactory>().CreateDatabaseService());
         }
     }
 }

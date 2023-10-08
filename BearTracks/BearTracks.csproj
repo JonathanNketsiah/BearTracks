@@ -30,15 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>SQLite\System.Data.SQLite.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\BearTracks.CoreLibrary\BearTracks.CoreLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Databases\SQLite\sqlite3.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>SQLite\System.Data.SQLite.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
