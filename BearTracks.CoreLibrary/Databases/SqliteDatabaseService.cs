@@ -39,18 +39,7 @@ namespace BearTracks.CoreLibrary.Databases
             }
         }
 
-        public IActionResult LoginUser(LoginModelDTO lModel)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public IActionResult CreateUser(CreateModelDTO cModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IActionResult> LoginUserAsync(LoginModelDTO lModel)
+        public async Task<IActionResult> LoginUser(LoginModelDTO lModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
@@ -79,7 +68,7 @@ namespace BearTracks.CoreLibrary.Databases
             else return new NotFoundResult();
         }
 
-        public async Task<IActionResult> CreateUserAsync(CreateModelDTO cModel)
+        public async Task<IActionResult> CreateUser(CreateModelDTO cModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection

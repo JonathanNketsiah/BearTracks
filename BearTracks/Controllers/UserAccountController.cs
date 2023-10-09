@@ -21,14 +21,14 @@ namespace BearTracks.Controllers
         [HttpPost("login")]
         public Task<IActionResult> Login([FromBody] LoginModelDTO model)
         {
-            return _handler.LoginUserAsync(model);
+            return _handler.LoginUser(model);
             
         }
 
         [HttpPost("create")]
         public Task<IActionResult> Create([FromBody] CreateModelDTO model)
         {
-            return _handler.CreateUserAsync(model);
+            return _handler.CreateUser(model);
         }
     }
 }

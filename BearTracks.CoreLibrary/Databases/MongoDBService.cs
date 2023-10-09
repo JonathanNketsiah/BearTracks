@@ -22,12 +22,7 @@ namespace BearTracks.CoreLibrary.Databases
             Setup();
         }
 
-        public IActionResult CreateUser(CreateModelDTO cModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IActionResult> CreateUserAsync(CreateModelDTO cModel)
+        public async Task<IActionResult> CreateUser(CreateModelDTO cModel)
         {
             if (REGEX.IsMatch(cModel.Email))
             {
@@ -47,13 +42,7 @@ namespace BearTracks.CoreLibrary.Databases
             else return new NotFoundResult();
         }
 
-        
-        public IActionResult LoginUser(LoginModelDTO lModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IActionResult> LoginUserAsync(LoginModelDTO lModel)
+        public async Task<IActionResult> LoginUser(LoginModelDTO lModel)
         {
 
             if (REGEX.IsMatch(lModel.Email))
