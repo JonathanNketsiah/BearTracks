@@ -1,19 +1,20 @@
 ﻿using BearTracks.CoreLibrary.Models.UserAccount;
+using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
+using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
     public class SqliteDatabaseService : IDatabaseService
     {
-        private const string DB_NAME = "MyDatabase.sqlite";
+        private const string DB_NAME = "Beartracks.sqlite";
         private const string TABLE_NAME = "users";
         //REGEX PATTERN for email address
         //This check needs to occur in the View as well,
         //but adding this to prevent any other direct calls to the API
-        private const string PATTERN = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-        private Regex REGEX = new Regex(PATTERN);
+        private Regex REGEX = new Regex(Constants.EMAIL_REGEX);
         private string ConnectionString;
 
         public SqliteDatabaseService(string connectionString)
@@ -22,8 +23,9 @@ namespace BearTracks.CoreLibrary.Databases
             if (!File.Exists(DB_NAME))
             {
                 SQLiteConnection.CreateFile(DB_NAME);
+                Setup();
             }
-            Setup();
+            
         }
 
         public void Setup()
@@ -31,13 +33,24 @@ namespace BearTracks.CoreLibrary.Databases
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), password varchar(50))";
+                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), password varchar(50));";
                 var command = new SQLiteCommand(sql, connection);
                 command.ExecuteNonQuery();
             }
         }
 
         public IActionResult LoginUser(LoginModelDTO lModel)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IActionResult CreateUser(CreateModelDTO cModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IActionResult> LoginUserAsync(LoginModelDTO lModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
@@ -66,10 +79,8 @@ namespace BearTracks.CoreLibrary.Databases
             else return new NotFoundResult();
         }
 
-
-        public IActionResult CreateUser(CreateModelDTO cModel)
+        public async Task<IActionResult> CreateUserAsync(CreateModelDTO cModel)
         {
-
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
             if (REGEX.IsMatch(cModel.Email))
