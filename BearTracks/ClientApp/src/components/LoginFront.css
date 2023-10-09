@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Bubbles&display=swap');
+
 /*
   1. Use a more-intuitive box-sizing model.
 */
@@ -18,9 +20,7 @@
 body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    font-size: 1.3rem;
+    background: linear-gradient(109.6deg, rgba(119, 44, 232, 0.68) 11.5%, rgb(119, 44, 232) 91.2%);
 }
 /*
   5. Improve media defaults
@@ -53,6 +53,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+
 }
 
 .container {
@@ -60,12 +61,55 @@ body {
     justify-content: center;
     flex-direction: column;
     padding: 20px;
-    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background: linear-gradient(109.6deg, rgba(119, 44, 232, 0.68) 11.5%, rgb(119, 44, 232) 91.2%);
 }
 
-    .container > h1 {
-        text-align: center;
-    }
+.img {
+    justify-content: center;
+    display: flex;
+    padding-top: 15px;
+    margin-bottom: 0;
+}
+
+.container-img{
+   
+    align-items:center;
+    display:flex;
+    height:180px;
+    width:180px;
+    margin-bottom:0;
+}
+
+.BearLogo {
+    padding-top:40px;
+    height: 360px;
+    width: 360px;
+    margin-bottom: 0;
+}
+.my-text {
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size:1.2em;
+}
+
+
+.container > h1 {
+    text-align: center;
+    font-family: 'Rubik Bubbles', cursive;
+    font-weight: 400;
+    font-size: 3.5em;
+    padding-bottom: 10px;
+    color: #ffffff;
+}
+
+.container > h2 {
+    text-align: center;
+    font-size: 2.0em;
+    margin-top: 0;
+}
+
 
 .input-wrapper {
     display: flex;
@@ -74,6 +118,7 @@ body {
 }
 
 input[type=text], input[type=password] {
+    border-radius:12px;
     padding: 10px;
     margin-bottom: 20px;
 }
@@ -84,13 +129,13 @@ input[type=text], input[type=password] {
     outline: none;
     border-radius: 10px;
     margin-top: 10px;
-   background-color: rgb(10, 50, 119);
+    background-color: teal;
     color: whitesmoke;
 }
 
     .input-wrapper > button:hover {
         cursor: pointer;
-        background-color: rgb(14, 72, 181);
+        background-color: teal;
     }
 
 .links-wrap {
@@ -98,9 +143,14 @@ input[type=text], input[type=password] {
     justify-content: center;
     flex-direction: column;
     margin: 15px;
+   
 }
 
     .links-wrap > a:hover {
-        color: rgb(110, 69, 146);
+        color:dodgerblue;
         
     }
+
+.navcolor {
+    color: cornflowerblue;
+}

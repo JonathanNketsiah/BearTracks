@@ -1,7 +1,10 @@
 import React, { useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import './LoginFront.css'
+//import bcrypt from 'bcryptjs';
 
+
+let hashedPassword = null;
 
 const SignUp = () => {
     const _firstNameScn = useRef(null);
@@ -9,7 +12,9 @@ const SignUp = () => {
     const _emailScn = useRef(null);
     const _userNameScn = useRef(null);
     const _passwordScn = useRef(null);
-    
+
+    const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
     const handleSignUp = async (event) => {
         event.preventDefault();
 
@@ -30,10 +35,9 @@ const SignUp = () => {
                     lastName: _lastNm,
                     email: _email,
                     userName: _userNm,
-                    password: _password  
+                    password: _password
                 })
             });
-            
             // Check if aacount creation was successful, then redirect if not
             if (response.ok) {
                 window.location.href = '/LandingPage'; // replace with your actual landing page URL
@@ -47,6 +51,43 @@ const SignUp = () => {
             // Handle your error here
         }
     }
+
+    const emailRegex = () => {
+        const email = _emailScn.current.value;
+        if (email === "") {
+            alert("Please enter an email")
+        }
+
+        else if (!emailValidator.test(email)) {
+            alert("invalid password")
+
+        }
+
+
+        else {
+            alert('valid')
+        }
+    }
+
+    const passwordRegex = () => {
+        const password = _passwordScn.current.value;
+
+        if (password === "") {
+            alert("Password is required")
+        }
+
+        else if (!passwordValidator.test(password)) {
+            alert("invalid password")
+
+        }
+
+
+        else {
+            alert('valid')
+        }
+    }
+
+
 
 
     return (
@@ -64,14 +105,18 @@ const SignUp = () => {
                 <input type='text' ref={_userNameScn} placeholder='user name' />
                 <label>Enter Password</label>
                 <input type='password' ref={_passwordScn} placeholder='password' autoComplete="off" />
-                <button>Sign Up</button>
+                <button onClick={() => {
+                    emailRegex()
+                    passwordRegex()
+                }}>SignUp</button>
             </form>
 
             <div className='links-wrap'>
-                <NavLink to={'/'} >Already have an account? Login</NavLink>
+                <NavLink to={'/'} className='navcolor'>Already have an account? Login</NavLink>
             </div>
         </div>
     )
 }
 
 export default SignUp
+//export { hashedPassword }
