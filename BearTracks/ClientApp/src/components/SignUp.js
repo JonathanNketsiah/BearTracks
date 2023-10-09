@@ -64,9 +64,9 @@ const SignUp = () => {
         }
 
 
-        else {
-            alert('valid')
-        }
+        // else {
+        //     alert('valid')
+        // }
     }
 
     const passwordRegex = () => {
@@ -82,9 +82,9 @@ const SignUp = () => {
         }
 
 
-        else {
-            alert('valid')
-        }
+        // else {
+        //     alert('valid')
+        // }
     }
 
 

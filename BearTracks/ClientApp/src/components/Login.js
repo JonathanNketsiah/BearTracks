@@ -7,8 +7,8 @@ import BearLogo from './Assets/BearLogo.png'
 
 
 const Login = () => {
-    const emailScn2 = useRef();
-    const passwordScn2 = useRef();
+    const _emailScn2 = useRef();
+    const _passwordScn2 = useRef();
     const emailValidator = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
@@ -51,7 +51,7 @@ const Login = () => {
     }
 
     const emailRegex = () => {
-        const email = emailScn2.current.value;
+        const email = _emailScn2.current.value;
         if (email === "") {
             alert("Please enter an email")
         }
@@ -62,13 +62,13 @@ const Login = () => {
         }
 
 
-        else {
-            alert('valid')
-        }
+        // else {
+        //     alert('valid')
+        // }
     }
 
     const passwordRegex = () => {
-        const password = passwordScn2.current.value;
+        const password = _passwordScn2.current.value;
 
         if (password === "") {
             alert("Password is required")
@@ -80,9 +80,9 @@ const Login = () => {
         }
 
 
-        else {
-            alert('valid')
-        }
+        // else {
+        //     alert('valid')
+        // }
 
     }
 
@@ -101,9 +101,9 @@ const Login = () => {
                 <h2 className='my-text'>Login</h2>
                 <form className='input-wrapper' onSubmit={handleIn}>
                     <label className='my-text'>Enter Email</label>
-                    <input type='text' ref={emailScn2} placeholder='email' />
+                    <input type='text' ref={_emailScn2} placeholder='email' />
                     <label className='my-text'>Enter Password</label>
-                    <input type='password' ref={passwordScn2} placeholder='password' autoComplete='off' />
+                    <input type='password' ref={_passwordScn2} placeholder='password' autoComplete='off' />
                     <button onClick={() => {
                         emailRegex()
                         passwordRegex()
