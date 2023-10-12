@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -15,10 +14,12 @@ namespace BearTracks.CoreLibrary.Databases
         private string _connectionString;
         private MongoClient _client;
         private IMongoDatabase _database;
+        private IDbSecurityService _security_svc;
 
-        public MongoDBService(string connectionString)
+        public MongoDBService(string connectionString, IDbSecurityService sec_svc)
         {
             _connectionString = connectionString;
+            _security_svc = sec_svc;
             Setup();
         }
 
@@ -26,9 +27,13 @@ namespace BearTracks.CoreLibrary.Databases
         {
             if (REGEX.IsMatch(cModel.Email))
             {
+                var salt = _security_svc.CreateSALT();
+                var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
+                var dataModel = new CreateModelHashingWrapperDTO().Wrap(cModel, passwordHash, Convert.ToBase64String(salt));
                 var collection = _database.GetCollection<BsonDocument>("users");
+                
                 // Create a document and insert it into the collection
-                var document = cModel.ToBsonDocument();
+                var document = dataModel.ToBsonDocument();
                 try
                 {
                     await collection.InsertOneAsync(document);
@@ -48,25 +53,21 @@ namespace BearTracks.CoreLibrary.Databases
             if (REGEX.IsMatch(lModel.Email))
             {
                 var collection = _database.GetCollection<BsonDocument>("users");
-
+                var hashedPassword = lModel.Password;
+                
                 // Create a filter to select the document
                 var filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("Email", lModel.Email), // Filter by field1
-                    Builders<BsonDocument>.Filter.Eq("Password", lModel.Password));
-
-                // Find the document and print it
+                    Builders<BsonDocument>.Filter.Eq("Email", lModel.Email)); // Filter by Email value
+          
                 try
                 {
-                    var result = await collection.CountDocumentsAsync(filter);
+                    
+                    var result = collection.Find(filter).FirstOrDefault();
+                    var storedPasswordHash = result["PasswordHash"].AsString;
+                    var salt = Convert.FromBase64String(result["SALT"].AsString);
+                    var passwordHash = _security_svc.HashPassword(lModel.Password, salt);
 
-                    if (result == 1)
-                    {
-                        return new OkResult();
-                    }
-                    else
-                    {
-                        return new NotFoundResult();
-                    }
+                    return storedPasswordHash.ToString() == passwordHash ? new OkResult() : new NotFoundResult();
                 }
                 catch (Exception ex)
                 {
