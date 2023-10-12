@@ -113,7 +113,6 @@ const Login = () => {
                 </form>
                 <div className='links-wrap'>
                     <NavLink to={'/signUp'} className ='navcolor'>Create an account</NavLink>
-                    <NavLink to={'/reset'} className ='navcolor'>Reset Password</NavLink>
                 </div>
             </div>
         </>
