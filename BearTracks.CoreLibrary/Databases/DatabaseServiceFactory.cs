@@ -5,10 +5,12 @@ namespace BearTracks.CoreLibrary.Databases
     public class DatabaseServiceFactory
     {
         private readonly IConfiguration _configuration;
+        private readonly IDbSecurityService _security_svc;
 
-        public DatabaseServiceFactory(IConfiguration configuration)
+        public DatabaseServiceFactory(IConfiguration configuration, IDbSecurityService security_svc)
         {
             _configuration = configuration;
+            _security_svc = security_svc;
         }
 
         public IDatabaseService CreateDatabaseService()
@@ -17,11 +19,11 @@ namespace BearTracks.CoreLibrary.Databases
 
             if (databaseType == "Sqlite")
             {
-                return new SqliteDatabaseService(_configuration.GetConnectionString("SqliteConnection"));
+                return new SqliteDatabaseService(_configuration.GetConnectionString("SqliteConnection"), _security_svc);
             }
             else if (databaseType == "MongoDB")
             {
-                return new MongoDBService(_configuration.GetConnectionString("MongoDBConnection"));
+                return new MongoDBService(_configuration.GetConnectionString("MongoDBConnection"), _security_svc);
             }
             else
             {

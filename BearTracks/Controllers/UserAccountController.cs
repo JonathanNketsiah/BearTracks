@@ -11,21 +11,22 @@ namespace BearTracks.Controllers
         private readonly ILogger<UserAccountController> _logger;
         private IDatabaseService _handler;
 
-        public UserAccountController(ILogger<UserAccountController> logger, IDatabaseService handler)
+        public UserAccountController(ILogger<UserAccountController> logger, 
+                                     IDatabaseService handler)
         {
             _logger = logger;
             _handler = handler;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModelDTO model)
+        public Task<IActionResult> Login([FromBody] LoginModelDTO model)
         {
             return _handler.LoginUser(model);
             
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateModelDTO model)
+        public Task<IActionResult> Create([FromBody] CreateModelDTO model)
         {
             return _handler.CreateUser(model);
         }
