@@ -56,7 +56,7 @@ function MapPage() {
                 {/* Display your list of locations here */}
             </div>
             <div style={mapStyle}>
-                <LoadScript googleMapsApiKey="AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA">
+                <LoadScript googleMapsApiKey="">
                     <GoogleMap
                         mapContainerStyle={containerStyle}
                         center={userLocation || center}
