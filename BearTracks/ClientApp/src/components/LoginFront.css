@@ -20,7 +20,7 @@
 body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    background: linear-gradient(109.6deg, rgba(119, 44, 232, 0.68) 11.5%, rgb(119, 44, 232) 91.2%);
+    background: rgb(245,245,245);
 }
 /*
   5. Improve media defaults
@@ -49,18 +49,19 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-
     height: 100vh;
 
 }
 
 .container {
+    height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     padding: 20px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background: linear-gradient(109.6deg, rgba(119, 44, 232, 0.68) 11.5%, rgb(119, 44, 232) 91.2%);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    background: rgb(127, 0, 255);
 }
 
 .img {
@@ -89,7 +90,7 @@ body {
     color: #ffffff;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size:1.2em;
+    font-size:1.2rem;
 }
 
 
@@ -97,7 +98,7 @@ body {
     text-align: center;
     font-family: 'Rubik Bubbles', cursive;
     font-weight: 400;
-    font-size: 3.5em;
+    font-size: 2.5em;
     padding-bottom: 10px;
     color: #ffffff;
 }
@@ -106,6 +107,15 @@ body {
     text-align: center;
     font-size: 2.0em;
     margin-top: 0;
+}
+
+.container > h3 {
+    text-align: center;
+    font-family: 'Rubik Bubbles', cursive;
+    font-weight: 400;
+    font-size: 1.5em;
+    padding-bottom: 10px;
+    color: #ffffff;
 }
 
 
@@ -127,13 +137,13 @@ input[type=text], input[type=password] {
     outline: none;
     border-radius: 10px;
     margin-top: 10px;
-    background-color: teal;
+    background-color: #17cf97;
     color: whitesmoke;
 }
 
     .input-wrapper > button:hover {
         cursor: pointer;
-        background-color: teal;
+        background-color: #20b2aa;
     }
 
 .links-wrap {

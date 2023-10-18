@@ -38,7 +38,7 @@ const Login = () => {
             
             // Check if login was successful, then redirect
             if (response.ok) {
-                window.location.href = '/LandingPage'; // replace with your actual landing page URL
+                window.location.href = '/Home'; // replace with your actual landing page URL
             }
             else {
                 console.error("Login Failed");

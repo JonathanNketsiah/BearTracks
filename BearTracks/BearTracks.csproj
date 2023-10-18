@@ -40,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\components\Assets\" />
     <Folder Include="ClientApp\src\components\NewFolder\" />
   </ItemGroup>
 

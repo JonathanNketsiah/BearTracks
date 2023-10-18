@@ -92,18 +92,18 @@ const SignUp = () => {
 
     return (
         <div className='container'>
-            <h1>Create Account</h1>
+            <h2 className='my-text'>Sign Up</h2>
 
             <form className='input-wrapper' onSubmit = {handleSignUp} >
-                <label>Enter First Name</label>
+                <label className='my-text'>Enter First Name</label>
                 <input type='text' ref={_firstNameScn} placeholder='first name' />
-                <label>Enter Last Name</label>
+                <label className='my-text'>Enter Last Name</label>
                 <input type='text' ref={_lastNameScn} placeholder='last name' />
-                <label>Enter Email</label>
-                <input type='text' ref={_emailScn} placeholder='email' />
-                <label>Enter User Name</label>
+                <label className='my-test'>Enter User Name</label>
                 <input type='text' ref={_userNameScn} placeholder='user name' />
-                <label>Enter Password</label>
+                <label className='my-test'>Enter Email</label>
+                <input type='text' ref={_emailScn} placeholder='email' />
+                <label className='my-test'>Enter Password</label>
                 <input type='password' ref={_passwordScn} placeholder='password' autoComplete="off" />
                 <button onClick={() => {
                     emailRegex()

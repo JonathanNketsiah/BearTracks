@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Bubbles&display=swap');
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(127, 0, 255);
+    padding: 15px 1rem;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    ;
+}
+
+.title {
+    font-family: 'Rubik Bubbles', cursive;
+    font-weight: 600;
+    font-size: 2.0rem;
+    color: #ffffff;
+    text-decoration: none;
+
+
+   
+}
+
+nav .title > h3:hover {
+    color: #17cf97;
+}
+
+#navbar{
+    display: flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#navbar li{
+    list-style:none;
+    padding: 0 20px;
+    position: relative;
+}
+
+    #navbar  li  .link {
+        text-decoration: none;
+        font-size: 1.6rem;
+        font-weight: 500;
+        font-family: 'Roboto', sans-serif;
+        color: #ffffff;
+        transition: 0.2s ease-in-out;
+    }
+
+#navbar li .link {
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    transition: 0.2s ease-in-out;
+}
+
+    #navbar li .link:hover,
+    #navbar li .link.active{
+        color: #17cf97;
+    }
+
+        #navbar li .link:hover::after,
+        #navbar li .link.active::after {
+            content: "";
+            width: 30%;
+            height: 2px;
+            background: #17cf97;
+            position: absolute;
+            bottom: -3px;
+            left: 20px;
+        }
+
+    #navbar button {
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        background-color: #20b2aa;
+        color: whitesmoke;
+    }
+
+        #navbar .button:hover {
+            cursor: pointer;
+          
+        }
+
+
+
