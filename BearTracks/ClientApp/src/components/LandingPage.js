@@ -8,11 +8,16 @@ const LandingPage = () => {
     const LogOut = () => {
         navigate('/')
     }
+    const LoadMap = () => {
+        navigate('/MapPage')
+    }
 
     return (
         <>
             <h1>Welcome to BearTracks</h1>
             <button onClick={LogOut}>LogOut </button>
+            <button onClick={LoadMap}>Map Page </button>
+
         </>
     )
 
