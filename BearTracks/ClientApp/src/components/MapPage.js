@@ -79,6 +79,17 @@ function MapPage() {
         borderRadius: '20px',
         overflow: 'hidden', 
     };
+    const customMapStyle = [
+        {
+            featureType: 'poi',
+            elementType: 'labels.icon',
+            stylers: [
+                {
+                    visibility: 'off',
+                },
+            ],
+        },
+    ];
 
     const buttonContainerStyle = {
         display: 'flex',
@@ -136,6 +147,7 @@ function MapPage() {
                         mapContainerStyle={containerStyle}
                         center={userLocation || center}
                         zoom={15}
+                        options={{ styles: customMapStyle }}
                     >
                         {userLocation && <Marker position={userLocation} />}
                     </GoogleMap>
