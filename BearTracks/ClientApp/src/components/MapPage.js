@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import eventsData from './Assets/events.json';
 
 
 const center = {
@@ -11,6 +12,7 @@ const center = {
 function MapPage() {
     const [address, setAddress] = useState('');
     const [userLocation, setUserLocation] = useState(null);
+    const [events, setEvents] = useState([]);
 
     const handleGeolocationClick = () => {
         if (navigator.geolocation) {
@@ -25,6 +27,9 @@ function MapPage() {
         }
     };
 
+    useEffect(() => {
+        setEvents(eventsData);
+    }, []);
     const handleSearch = () => {
         const apiKey = 'AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA';
         const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -140,6 +145,17 @@ function MapPage() {
                     >AutoLocate
                     </button>
                 </div>
+                <div style={{ marginTop: '20px' }}>
+                    <h2>Events</h2>
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                        {events.map((event, index) => (
+                            <li key={index} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc' }}>
+                                <h3>{event.name}</h3>
+                                <p>{event.location}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
             <div style={{...mapStyle, ...mapInnerContainerStyle}}>
                 <LoadScript googleMapsApiKey="AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA">
@@ -150,6 +166,12 @@ function MapPage() {
                         options={{ styles: customMapStyle }}
                     >
                         {userLocation && <Marker position={userLocation} />}
+                        {events.map((event, index) => (
+                            <Marker
+                                key={index}
+                                position={{ lat: event.latitude, lng: event.longitude }}
+                            />
+                        ))}
                     </GoogleMap>
                 </LoadScript>
 

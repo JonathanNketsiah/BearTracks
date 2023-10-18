@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Event 1",
+    "location": "Gwinnett County, Georgia",
+    "latitude": 33.989853,
+    "longitude": -83.993190
+  },
+  {
+    "name": "Event 2",
+    "location": "Near GGC Campus",
+    "latitude": 33.989903, 
+    "longitude": -83.993240 
+  },
+  {
+    "name": "Event 3",
+    "location": "Near GGC Campus",
+    "latitude": 33.989953,
+    "longitude": -83.993290 
+  }
+]
