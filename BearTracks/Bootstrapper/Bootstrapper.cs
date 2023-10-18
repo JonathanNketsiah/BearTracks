@@ -1,4 +1,5 @@
 ﻿using BearTracks.CoreLibrary.Databases;
+using BearTracks.CoreLibrary.Databases.Interfaces;
 
 namespace BearTracks.Bootstrapper
 {

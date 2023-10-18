@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using BearTracks.CoreLibrary.Databases.Interfaces;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -9,6 +10,7 @@ namespace BearTracks.CoreLibrary.Databases
         public byte[] CreateSALT()
         {
             byte[] salt = new byte[16];
+            
             //Fill array with random values 
             using (var rng = RandomNumberGenerator.Create())
             {

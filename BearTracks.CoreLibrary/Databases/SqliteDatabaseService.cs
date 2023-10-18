@@ -1,4 +1,5 @@
-﻿using BearTracks.CoreLibrary.Models.UserAccount;
+﻿using BearTracks.CoreLibrary.Databases.Interfaces;
+using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;

@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BearTracks.CoreLibrary.Databases.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace BearTracks.CoreLibrary.Databases
 {
-    public class DatabaseServiceFactory
+    public class DatabaseServiceFactory : IDatabaseServiceFactory
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration? _configuration;
         private readonly IDbSecurityService _security_svc;
 
         public DatabaseServiceFactory(IConfiguration configuration, IDbSecurityService security_svc)

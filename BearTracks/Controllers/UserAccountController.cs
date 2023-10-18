@@ -1,6 +1,6 @@
 ﻿using BearTracks.CoreLibrary.Models.UserAccount;
-using BearTracks.CoreLibrary.Databases;
 using Microsoft.AspNetCore.Mvc;
+using BearTracks.CoreLibrary.Databases.Interfaces;
 
 namespace BearTracks.Controllers
 {
@@ -28,7 +28,7 @@ namespace BearTracks.Controllers
         [HttpPost("create")]
         public Task<IActionResult> Create([FromBody] CreateModelDTO model)
         {
-            return _handler.CreateUser(model);
+                return _handler.CreateUser(model);
         }
     }
 }
