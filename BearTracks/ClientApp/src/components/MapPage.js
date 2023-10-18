@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+//import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import eventsData from './Assets/events.json';
 
 
