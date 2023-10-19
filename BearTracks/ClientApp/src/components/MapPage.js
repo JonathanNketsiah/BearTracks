@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
+import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import eventsData from './Assets/events.json';
 
@@ -9,10 +9,13 @@ const center = {
     lat: 0,
     lng: 0,
 };
+
 function MapPage() {
     const [address, setAddress] = useState('');
     const [userLocation, setUserLocation] = useState(null);
     const [events, setEvents] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedListEvent, setSelectedListEvent] = useState(null);
 
     const handleGeolocationClick = () => {
         if (navigator.geolocation) {
@@ -51,7 +54,9 @@ function MapPage() {
                 alert('There was an error while fetching data. Please try again.');
             });
     };
-
+    const handleEventMarkerClick = (event) => {
+        setSelectedEvent(event);
+    };
     const containerStyle = {
         width: '100%',
         paddingBottom: '56.25%',
@@ -149,7 +154,9 @@ function MapPage() {
                     <h2>Events</h2>
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {events.map((event, index) => (
-                            <li key={index} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc' }}>
+                            <li key={index}
+                                style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', cursor: 'pointer' }}
+                                onClick={() => setSelectedListEvent(event)}>
                                 <h3>{event.name}</h3>
                                 <p>{event.location}</p>
                             </li>
@@ -165,13 +172,39 @@ function MapPage() {
                         zoom={15}
                         options={{ styles: customMapStyle }}
                     >
-                        {userLocation && <Marker position={userLocation} />}
+                        {userLocation && <Marker
+                            position={userLocation}
+ />}
                         {events.map((event, index) => (
                             <Marker
                                 key={index}
                                 position={{ lat: event.latitude, lng: event.longitude }}
+                                onClick={() => handleEventMarkerClick(event)}
                             />
                         ))}
+                        {selectedEvent && (
+                            <InfoWindow
+                                position={{ lat: selectedEvent.latitude, lng: selectedEvent.longitude }}
+                                onCloseClick={() => setSelectedEvent(null)}
+                            >
+                                <div>
+                                    <h3>{selectedEvent.name}</h3>
+                                    <p>{selectedEvent.description}</p>
+                                </div>
+                            </InfoWindow>
+                        )}
+                        {selectedListEvent && (
+                            <InfoWindow
+                                position={{ lat: selectedListEvent.latitude, lng: selectedListEvent.longitude }}
+                                onCloseClick={() => setSelectedListEvent(null)}
+                            >
+                                <div>
+                                    <h3>{selectedListEvent.name}</h3>
+                                    <p>{selectedListEvent.description}</p>
+                                </div>
+                            </InfoWindow>
+                        )}
+                      
                     </GoogleMap>
                 </LoadScript>
 
