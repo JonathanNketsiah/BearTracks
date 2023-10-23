@@ -1,50 +1,187 @@
+using BearTracks.Controllers;
 using BearTracks.CoreLibrary.Models.UserAccount;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BearTracks.Tests.ControllerTests
+namespace BearTracks.UnitTest.ControllerTests
 {
-    [Collection("UAController")]
+    [TestClass]
     public class UAControllerTests : TestBase
     {
-        public UAControllerTests(WebApplicationFactory<Program> factory) : base(factory)
+        private UserAccountController _controller;
+        private ILogger<UserAccountController>? _logger;
+
+        public UAControllerTests()
         {
+            _controller = new UserAccountController(_logger, _databaseService);
+            SetLogger();
         }
 
-        [Fact]
-        public async Task TestMethod1()
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
         {
-            CreateModelDTO dto = new CreateModelDTO
-            {
-                Email = "test@test.com",
-                FirstName = "Firstname",
-                LastName = "LastName",
-                Password = "test_password",
-                UserName = "G_Daggy_Dagg"
-            };
-
-            var response = await TestYourApiMethod(dto);
-
-            if (response != null)
-                Assert.Equal(StatusCodes.Status200OK, (int)response.StatusCode);
+            BuildConfiguration();
+            ConfigureCustomServices();
+            Setup();
         }
 
-        public async Task<HttpResponseMessage?> TestYourApiMethod(CreateModelDTO dto)
+        [TestMethod]
+        public void Login_ValidModel_ReturnsOkResult()
         {
             // Arrange
-            var baseUrl = "https://localhost:44428/signUp"; // Replace with the actual API endpoint
-            var queryString = $"/?firstName={dto.FirstName}&lastName={dto.LastName}" +
-                $"&email={dto.Email}&userName={dto.UserName}&password={dto.Password}"; // Build the query string
-            var fullUrl = baseUrl + queryString; // Combine the base URL and query string
+
+            var model = new LoginModelDTO
+            {
+                Email = "test@test.com",
+                Password = "test"
+
+            };
 
             // Act
-            var response = await _client.GetAsync(fullUrl);
+            var result = _controller.Login(model);
 
             // Assert
-            return response.EnsureSuccessStatusCode();
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
 
-            // You can further assert the response content or other aspects of the response here.
+        [TestMethod]
+        public void Login_WrongPassword_ReturnsNtFoundResult()
+        {
+            // Arrange
+
+            var model = new LoginModelDTO
+            {
+                Email = "test@test.com",
+                Password = "BadPassword"
+
+            };
+
+            // Act
+            var result = _controller.Login(model);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void Login_InvalidEmail_ReturnsNtFoundResult()
+        {
+            // Arrange
+
+            var model = new LoginModelDTO
+            {
+                Email = "NotAProperEmail",
+                Password = "BadPassword"
+
+            };
+
+            // Act
+            var result = _controller.Login(model);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void Create_ValidModel_ReturnsOkResult()
+        {
+            // Arrange
+            var model = new CreateModelDTO
+            {
+                FirstName="New",
+                LastName="User",
+                Email="newuser@test.com",
+                Password="New",
+                UserName="UsaNaHaus!"
+            };
+            // Act
+            var result = _controller.Create(model);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public void Create_InvalidEmail_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var model = new CreateModelDTO
+            {
+                FirstName = "New",
+                LastName = "User",
+                Email = "AbsolutelyNotAnEmail",
+                Password = "New",
+                UserName = "UsaNaHaus!"
+            };
+            // Act
+            var result = _controller.Create(model);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void Create_UseExistingEmail_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var model = new CreateModelDTO
+            {
+                FirstName = "New",
+                LastName = "User",
+                Email = "test@test.com",
+                Password = "New",
+                UserName = "UsaNaHaus!"
+            };
+            // Act
+            var result = _controller.Create(model);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+
+        //TODO I don;t like this implementation, but it is granular and works. Research better way.
+        //Learn how to do this genericaly.
+        protected override void SetLogger()
+        {
+            _serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
+
+            _serviceCollection.AddSingleton<ILogger<UserAccountController>>(x =>
+            {
+                var loggerFactory = x.GetRequiredService<ILoggerFactory>();
+                return loggerFactory.CreateLogger<UserAccountController>();
+            });
+
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+            _logger = serviceProvider.GetRequiredService<ILogger<UserAccountController>>();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            RestoreDatabase();
+        }
+
+        protected static void RestoreDatabase()
+        {
+            var user1 = new DeleteUserDTO
+            {
+                Email = "test@test.com",
+                Password = "test",
+            };
+            var user2 = new DeleteUserDTO
+            {
+                Email = "newuser@test.com",
+                Password = "New",
+            };
+
+            if (_databaseService != null)
+            {
+                _databaseService.DeleteUser(user1);
+                _databaseService.DeleteUser(user2);
+            }
         }
     }
 }

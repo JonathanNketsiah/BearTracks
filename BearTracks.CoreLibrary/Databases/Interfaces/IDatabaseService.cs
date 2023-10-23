@@ -6,7 +6,8 @@ namespace BearTracks.CoreLibrary.Databases.Interfaces
     public interface IDatabaseService
     {
         void Setup();
-        Task<IActionResult> LoginUser(LoginModelDTO lModel);
-        Task<IActionResult> CreateUser(CreateModelDTO cModel);
+        IActionResult LoginUser(LoginModelDTO lModel);
+        IActionResult CreateUser(CreateModelDTO cModel);
+        IActionResult DeleteUser(DeleteUserDTO delModel);
     }
 }

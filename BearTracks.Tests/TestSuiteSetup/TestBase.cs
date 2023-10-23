@@ -1,49 +1,56 @@
-﻿using BearTracks.Controllers;
-using BearTracks.CoreLibrary.Databases.Interfaces;
+﻿using BearTracks.CoreLibrary.Databases.Interfaces;
 using BearTracks.CoreLibrary.Databases;
-using BearTracks.Tests.Mocks;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Xunit;
+using Microsoft.Extensions.Configuration;
+using BearTracks.CoreLibrary.Models.UserAccount;
 
-public abstract class TestBase : IClassFixture<WebApplicationFactory<Program>>
+public abstract class TestBase
 {
-    protected static ILogger<UserAccountController> logger;
-    protected static IDatabaseService handler;
-    protected WebApplicationFactory<Program> _factory;
-    protected HttpClient _client;
+    protected static IServiceCollection _serviceCollection = new ServiceCollection();
+    protected static IDatabaseService? _databaseService { get; set; }
+    protected static IConfiguration? _configuration { get; set; }
 
-    public TestBase(WebApplicationFactory<Program> factory)
+
+    protected abstract void SetLogger();
+    
+    protected static void BuildConfiguration()
     {
-        _factory = factory;
-
-        var services = new ServiceCollection();
-
-        // Define an Action<IServiceCollection> delegate for configuring services
-        Action<IServiceCollection> configureServices = collection =>
-        {
-            ConfigureCustomServices(collection);
-        };
-
-        // Use the configureServices delegate to configure services
-        _factory = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(configureServices);
-            // You can configure the web host builder if needed
-        });
-
-        _client = _factory.CreateClient();
-        logger = new Logger<UserAccountController>(new LoggerFactory());
-        handler = _factory.Services.GetRequiredService<IDatabaseService>();
+        _configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory) // Use the test project's base directory
+            .AddJsonFile("appsettings.test.json") // Specify the file to load
+            .Build();
     }
 
-
     // Configure your custom services here
-    private void ConfigureCustomServices(IServiceCollection services)
+    protected static void ConfigureCustomServices()
     {
-        services.AddTransient<IDatabaseServiceFactory, MockDatabaseServiceFactory>();
-        services.AddScoped<IDatabaseService>(provider => provider.GetRequiredService<IDatabaseServiceFactory>().CreateDatabaseService());
-        services.AddTransient<IDbSecurityService, DbSecurityService>();
+        _serviceCollection.AddTransient<IDatabaseServiceFactory, DatabaseServiceFactory>();
+        _serviceCollection.AddScoped<IDatabaseService>(provider => provider.GetRequiredService<IDatabaseServiceFactory>().CreateDatabaseService());
+        _serviceCollection.AddTransient<IDbSecurityService, DbSecurityService>();
+        
+        if (_configuration != null)
+        {
+            _serviceCollection.AddSingleton<IConfiguration>(_configuration);
+        }
+    }   
+    
+    protected static void Setup()
+    {
+        var serviceProvider = _serviceCollection.BuildServiceProvider();
+        _databaseService = serviceProvider.GetRequiredService<IDatabaseService>();
+        CreateTestData(_databaseService);
+    }
+
+    private static void CreateTestData(IDatabaseService svc)
+    {
+        var testModel = new CreateModelDTO
+        {
+            FirstName = "Testy",
+            LastName = "Tester",
+            Email = "test@test.com",
+            Password = "test",
+            UserName = "Testizzy!"
+        };
+        svc.CreateUser(testModel);
     }
 }

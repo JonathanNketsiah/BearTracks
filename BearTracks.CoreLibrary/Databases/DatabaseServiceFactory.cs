@@ -16,19 +16,32 @@ namespace BearTracks.CoreLibrary.Databases
 
         public IDatabaseService CreateDatabaseService()
         {
-            string databaseType = _configuration["Database"];
+            if (_configuration != null)
+            {
+                string? databaseType = _configuration["Database"];
 
-            if (databaseType == "Sqlite")
-            {
-                return new SqliteDatabaseService(_configuration.GetConnectionString("SqliteConnection"), _security_svc);
-            }
-            else if (databaseType == "MongoDB")
-            {
-                return new MongoDBService(_configuration.GetConnectionString("MongoDBConnection"), _security_svc);
+                if (databaseType == "Sqlite")
+                {
+                    return new SqliteDatabaseService(
+                        _configuration["DatabaseName"],
+                        _configuration.GetConnectionString("SqliteConnection"),
+                        _security_svc);
+                }
+                else if (databaseType == "MongoDB")
+                {
+                    return new MongoDBService(
+                        _configuration["DatabaseName"], 
+                        _configuration.GetConnectionString("MongoDBConnection"), 
+                        _security_svc);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid database type specified in appropriate appsettings.json file");
+                }
             }
             else
             {
-                throw new InvalidOperationException("Invalid database type specified in appsettings.json");
+                throw new NullReferenceException("Configuration Object is not present.");
             }
         }
     }
