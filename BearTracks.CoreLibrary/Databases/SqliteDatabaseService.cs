@@ -1,38 +1,37 @@
-﻿using BearTracks.CoreLibrary.Models.UserAccount;
+﻿using BearTracks.CoreLibrary.Databases.Interfaces;
+using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;
 using System.Text;
 using System.Text.RegularExpressions;
+using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
     public class SqliteDatabaseService : IDatabaseService
     {
-        private const string DB_NAME = "Beartracks.sqlite";
         private const string TABLE_NAME = "users";
         //REGEX PATTERN for email address
         //This check needs to occur in the View as well,
         //but adding this to prevent any other direct calls to the API
-        private Regex REGEX = new Regex(Constants.EMAIL_REGEX);
-        private string ConnectionString;
+        private Regex _regex = new Regex(Constants.EMAIL_REGEX);
+        private readonly string? _connectionString;
+        private readonly string? _databaseName;
         private IDbSecurityService _security_svc;
 
-        public SqliteDatabaseService(string connectionString, IDbSecurityService sec_svc)
+        public SqliteDatabaseService(string? databaseName, string? connectionString, IDbSecurityService sec_svc)
         {
-            ConnectionString = connectionString;
+            _databaseName = databaseName;
+            _connectionString = connectionString;
             _security_svc = sec_svc;
 
-            if (!File.Exists(DB_NAME))
-            {
-                SQLiteConnection.CreateFile(DB_NAME);
-            }
             Setup();
         }
 
         public void Setup()
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
                 var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), passwordHash varchar(50), salt varchar(50));";
@@ -41,13 +40,13 @@ namespace BearTracks.CoreLibrary.Databases
             }
         }
 
-        public async Task<IActionResult> LoginUser(LoginModelDTO lModel)
+        public IActionResult LoginUser(LoginModelDTO lModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
-            if (REGEX.IsMatch(lModel.Email))
+            if (_regex.IsMatch(lModel.Email))
             {
-                using (var connection = new SQLiteConnection(ConnectionString))
+                using (var connection = new SQLiteConnection(_connectionString))
                 {
 
                     string query = $"SELECT * FROM {TABLE_NAME} WHERE LOWER(email) = @email";
@@ -78,13 +77,13 @@ namespace BearTracks.CoreLibrary.Databases
             else return new NotFoundResult();
         }
 
-        public async Task<IActionResult> CreateUser(CreateModelDTO cModel)
+        public IActionResult CreateUser(CreateModelDTO cModel)
         {
             //Currently adding a check for email pattern. 
             //TODO Determine password pattern to prevent injection
-            if (REGEX.IsMatch(cModel.Email))
+            if (_regex.IsMatch(cModel.Email))
             {
-                using (var connection = new SQLiteConnection(ConnectionString))
+                using (var connection = new SQLiteConnection(_connectionString))
                 {
                     var salt = _security_svc.CreateSALT();
                     var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
@@ -113,6 +112,34 @@ namespace BearTracks.CoreLibrary.Databases
                 }
             }
             else return new NotFoundResult();
+        }
+
+        public IActionResult DeleteUser(DeleteUserDTO delModel)
+        {
+            if (delModel.Email != null)
+            {
+                if (_regex.IsMatch(delModel.Email))
+                {
+                    using (var connection = new SQLiteConnection(_connectionString))
+                    {
+
+                        string query = $"DELETE FROM {TABLE_NAME} WHERE LOWER(email) = @email";
+                        connection.Open();
+                        using (var command = new SQLiteCommand(query, connection))
+                        {
+                            command.Parameters.Add(new SQLiteParameter("@email", delModel.Email));
+                            int deletedRows = command.ExecuteNonQuery();
+                            if (deletedRows == 1)
+                                return new OkResult();
+                            else
+                                return new NotFoundResult();
+                        }
+
+                    }
+                }
+                return new NotFoundResult();
+            }
+            return new NotFoundResult();
         }
     }
 }

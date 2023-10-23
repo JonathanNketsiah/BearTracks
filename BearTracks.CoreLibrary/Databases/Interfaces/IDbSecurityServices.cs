@@ -1,4 +1,4 @@
-﻿namespace BearTracks.CoreLibrary.Databases
+﻿namespace BearTracks.CoreLibrary.Databases.Interfaces
 {
     public interface IDbSecurityService
     {
