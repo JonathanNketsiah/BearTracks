@@ -1,5 +1,6 @@
 import Login from './components/Login'
 import SignUp from './components/SignUp'
+import Reset from './components/Reset'
 import { Route, Routes } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import ProtectedRoutes from './ProtectedRoute'
@@ -23,6 +24,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<Login/>} />  
                 <Route path='/signUp' element={<SignUp />} />
+                <Route path='/Reset' element={<Reset />} />
                 <Route path='/Home' element={<MapPage />} />
                 <Route path='/Profile' element={<Profile />} />
                 <Route path='/Social' element={<Social />} />

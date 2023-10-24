@@ -35,5 +35,11 @@ namespace BearTracks.Controllers
             else
                 return null;
         }
+
+        [HttpPost("reset")]
+        public IActionResult? Reset([FromBody] CreateModelDTO model)
+        {
+            return new OkResult();
+        }
     }
 }
