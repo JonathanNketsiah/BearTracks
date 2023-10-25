@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import eventsData from './Assets/events.json';
-
-
+import SeatGeekEvents from './SeatGeekEvents';
+import seatgeekIcon from './Assets/seatgeek-marker.png'
 const center = {
     lat: 0,
     lng: 0,
@@ -16,7 +16,12 @@ function MapPage() {
     const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [selectedListEvent, setSelectedListEvent] = useState(null);
+    const [eventsOnMap, setEventsOnMap] = useState([]);
+    const [selectedMarker, setSelectedMarker] = useState(null);
 
+    const handleEventMarkerClickSG = (event) => {
+        setSelectedMarker(event);
+    };
     const handleGeolocationClick = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -127,7 +132,6 @@ function MapPage() {
 
     return (
         <div style={pageStyle}>
-
             <div style={listStyle}>
                 <div style={buttonContainerStyle}>
                     <input
@@ -162,8 +166,11 @@ function MapPage() {
                             </li>
                         ))}
                     </ul>
+                    <hr style={{ border: '2px solid purple', margin: '20px 0' }} />
                 </div>
+                <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
             </div>
+
             <div style={{...mapStyle, ...mapInnerContainerStyle}}>
                 <LoadScript googleMapsApiKey="AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA">
                     <GoogleMap
@@ -173,13 +180,25 @@ function MapPage() {
                         options={{ styles: customMapStyle }}
                     >
                         {userLocation && <Marker
-                            position={userLocation}
- />}
+                            position={userLocation} />}
+
                         {events.map((event, index) => (
                             <Marker
                                 key={index}
                                 position={{ lat: event.latitude, lng: event.longitude }}
                                 onClick={() => handleEventMarkerClick(event)}
+                            />
+                        ))}
+                        {eventsOnMap.map((event, index) => (
+                            <Marker
+                                key={index}
+                                position={{
+                                    lat: event.venue.location.lat,
+                                    lng: event.venue.location.lon,
+                                }}
+                                icon={seatgeekIcon}
+                                onClick={() => handleEventMarkerClickSG(event)}
+
                             />
                         ))}
                         {selectedEvent && (
@@ -204,7 +223,34 @@ function MapPage() {
                                 </div>
                             </InfoWindow>
                         )}
-                      
+                        {selectedMarker && (
+                            <InfoWindow
+                                position={{
+                                    lat: selectedMarker.venue.location.lat,
+                                    lng: selectedMarker.venue.location.lon,
+                                }}
+                                onCloseClick={() => setSelectedMarker(null)}
+                            >
+                                <div>
+                                    <h3>{selectedMarker.title}</h3>
+                                    <p>{selectedMarker.venue.address}</p>
+                                    <p>Date and Time: {new Date(selectedMarker.datetime_local).toLocaleString()}</p>
+                                    {selectedMarker.performers && selectedMarker.performers.length > 0 && (
+                                        <div>
+                                            <h4>Performers</h4>
+                                            <ul style={{ listStyleType: 'none', display: 'flex', flexWrap: 'wrap' }}>
+                                                {selectedMarker.performers.map((performer, performerIndex) => (
+                                                    <li key={performerIndex} style={{ marginRight: '10px' }}>
+                                                        <img src={performer.image} alt={performer.name} width="100" height="100" />
+                                                        <p>{performer.name}</p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            </InfoWindow>
+                        )}
                     </GoogleMap>
                 </LoadScript>
 
