@@ -162,3 +162,54 @@ input[type=text], input[type=password] {
 .navcolor {
     color: cornflowerblue;
 }
+
+
+.primaryCont {
+    width: 600px;
+    height: 500px;
+    margin: 100px auto;
+    background: #fff;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.profileContainer {
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    flex-direction:column;
+}
+
+.cards{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    
+}
+
+.cards {
+    flex: 0 0 calc(40% - 20px);
+    max-width: calc(40% - 20px);
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
+}
+
+.profileTitle{
+    text-align:center;
+}
+
+.profilePic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.editPicbtn {
+     border-radius:15px;
+}

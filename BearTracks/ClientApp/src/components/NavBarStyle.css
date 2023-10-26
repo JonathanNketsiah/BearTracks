@@ -6,22 +6,32 @@ nav {
     background: rgb(127, 0, 255);
     padding: 15px 1rem;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    ;
+    
 }
 
 .title {
     font-family: 'Rubik Bubbles', cursive;
-    font-weight: 600;
-    font-size: 2.0rem;
+    font-weight: 500;
+    font-size: 1.6rem;
     color: #ffffff;
     text-decoration: none;
-
-
-   
+    transition: 0.2s ease-in-out;
 }
 
-nav .title > h3:hover {
+nav .title:hover,
+nav .title.active {
     color: #17cf97;
+}
+
+nav .title:hover::after,
+nav .title.active::after {
+    content: "";
+    width: 60%;
+    height: 2px;
+    background: #17cf97;
+    position: absolute;
+    bottom: -6px;
+    left: 20px;
 }
 
 #navbar{
