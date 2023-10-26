@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 //import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import eventsData from './Assets/events.json';
 import SeatGeekEvents from './SeatGeekEvents';
 import seatgeekIcon from './Assets/seatgeek-marker.png'
+import logo from './Assets/logo.png'; 
+
 const center = {
     lat: 0,
     lng: 0,
@@ -20,6 +21,8 @@ function MapPage() {
     const [selectedListEvent, setSelectedListEvent] = useState(null);
     const [eventsOnMap, setEventsOnMap] = useState([]);
     const [selectedMarker, setSelectedMarker] = useState(null);
+    const [mapLogoVisible, setMapLogoVisible] = useState(true);
+    const [locationInputted, setLocationInputted] = useState(false);
 
     const handleEventMarkerClickSG = (event) => {
         setSelectedMarker(event);
@@ -31,15 +34,19 @@ function MapPage() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 });
+                setLocationInputted(true)
             });
         } else {
             alert('Geolocation is not supported by your browser.');
         }
     };
-
     useEffect(() => {
-        setEvents(eventsData);
-    }, []);
+        if (userLocation) {
+            setMapLogoVisible(false); 
+            setEvents(eventsData);
+        }
+    }, [userLocation]);
+
     const handleSearch = () => {
         const apiKey = 'AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA';
         const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -52,6 +59,7 @@ function MapPage() {
                 if (data.status === 'OK' && data.results.length > 0) {
                     const location = data.results[0].geometry.location;
                     setUserLocation({ lat: location.lat, lng: location.lng });
+                    setLocationInputted(true); 
                 } else {
                     alert('Address not found. Please enter a valid address.');
                 }
@@ -64,8 +72,10 @@ function MapPage() {
     const handleEventMarkerClick = (event) => {
         setSelectedEvent(event);
     };
+
     const containerStyle = {
         width: '100%',
+        height: '100%',
         paddingBottom: '56.25%',
     };
 
@@ -76,6 +86,7 @@ function MapPage() {
 
     const listStyle = {
         width: '25%',
+        height: '75%',
         background: 'lightpurple', 
         borderRadius: '10px', 
         padding: '10px', 
@@ -91,8 +102,10 @@ function MapPage() {
         boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)', 
         margin: '10px', 
         background: 'white',
+        padding: '1%',
     };
     const mapInnerContainerStyle = {
+        height: '75%',
         borderRadius: '20px',
         overflow: 'hidden', 
     };
@@ -157,7 +170,7 @@ function MapPage() {
                     >AutoLocate
                     </button>
                 </div>
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '20px' }} style={{ display: locationInputted ? 'block' : 'none' }} >
                     <h2>Events</h2>
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {events.map((event, index) => (
@@ -169,15 +182,31 @@ function MapPage() {
                             </li>
                         ))}
                     </ul>
-                    <hr style={{ border: '2px solid purple', margin: '20px 0' }} />
+                    <hr style={{ border: '3px solid black', margin: '20px 0' }} />
+                    <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
+
                 </div>
-                <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
             </div>
 
             <div style={{...mapStyle, ...mapInnerContainerStyle}}>
                 <LoadScript googleMapsApiKey="AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA">
+                    {mapLogoVisible ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',padding:'10%' }}>
+                            <img
+                                src={logo}
+                                alt="Map Logo"
+                                style={{
+                                    width: '25%', height: '25%', animation: 'bounce 2s infinite', }}
+
+                            />
+                            <p style={{ marginTop: '10px', fontSize: '18px', textAlign: 'center' }}>Input or share location to get started!</p>
+                        </div>
+
+                    ) : (
                     <GoogleMap
-                        mapContainerStyle={containerStyle}
+                                mapContainerStyle={{
+                                    ...containerStyle,
+                                }}
                         center={userLocation || center}
                         zoom={15}
                         options={{ styles: customMapStyle }}
@@ -254,7 +283,8 @@ function MapPage() {
                                 </div>
                             </InfoWindow>
                         )}
-                    </GoogleMap>
+                        </GoogleMap>
+                    )}
                 </LoadScript>
 
             </div>

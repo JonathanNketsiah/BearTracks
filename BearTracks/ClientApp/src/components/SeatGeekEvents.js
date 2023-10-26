@@ -8,7 +8,7 @@ function SeatGeekEvents({ userLocation, setEventsOnMap }) {
         if (userLocation) {
             // Fetch events from SeatGeek API here
             const apiKey = 'Mzc3OTM4NTV8MTY5ODI0OTAwOS40MTYyNzUz';
-            const seatGeekUrl = `https://api.seatgeek.com/2/events?geoip=false&lat=${userLocation.lat}&lon=${userLocation.lng}&client_id=${apiKey}&per_page=10`;
+            const seatGeekUrl = `https://api.seatgeek.com/2/events?geoip=false&lat=${userLocation.lat}&lon=${userLocation.lng}&client_id=${apiKey}&per_page=5`;
 
             fetch(seatGeekUrl)
                 .then((response) => response.json())
