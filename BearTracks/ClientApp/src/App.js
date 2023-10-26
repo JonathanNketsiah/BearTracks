@@ -21,7 +21,7 @@ function App() {
             </NavbarStatus>
             
             <Routes>
-                <Route path='/' element={<Login/>} />  
+                <Route path='/' element={<Login />} />
                 <Route path='/signUp' element={<SignUp />} />
                 <Route path='/Home' element={<MapPage />} />
                 <Route path='/Profile' element={<Profile />} />
