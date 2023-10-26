@@ -15,13 +15,13 @@ function Navbar() {
     return (
         <>
             <nav>
-                <NavLink to="/About" className="title" > <h3>BearTracks</h3></NavLink>
+                <NavLink to="/Home" className="title" > BearTracks</NavLink>
+               
                 <div>
-                    <ul id="navbar">
-                        
-                        <li><NavLink to ="/Home" className ="link" >Home</NavLink></li>
+                    <ul id="navbar">                           
                         <li><NavLink to="/Social" className="link" >Social</NavLink></li>
                         <li><NavLink to="/Profile" className="link" >Account</NavLink></li>
+                        <li><NavLink to="/About" className="link" >About us</NavLink></li>
                         <button className ="logOutbutton"onClick={LogOut}>LogOut </button>
                         
                        

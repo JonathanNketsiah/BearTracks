@@ -3,15 +3,19 @@
 /*
   1. Use a more-intuitive box-sizing model.
 */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
+
 /*
   2. Remove default margin
 */
 * {
     margin: 0;
 }
+
 /*
   Typographic tweaks!
   3. Add accessible line-height
@@ -20,31 +24,49 @@
 body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    background: rgb(245,245,245);
+    background: rgb(245, 245, 245);
 }
+
 /*
   5. Improve media defaults
 */
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
     display: block;
     max-width: 100%;
 }
+
 /*
   6. Remove built-in form typography styles
 */
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
     font: inherit;
 }
+
 /*
   7. Avoid text overflows
 */
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     overflow-wrap: break-word;
 }
+
 /*
   8. Create a root stacking context
 */
-#root, #__next {
+#root,
+#__next {
     isolation: isolate;
 }
 
@@ -73,30 +95,31 @@ body {
     margin-bottom: 0;
 }
 
-.container-img{
-   
-    align-items:center;
-    display:flex;
-    height:180px;
-    width:180px;
-    margin-bottom:0;
+.container-img {
+
+    align-items: center;
+    display: flex;
+    height: 180px;
+    width: 180px;
+    margin-bottom: 0;
 }
 
 .BearLogo {
-    padding-top:40px;
+    padding-top: 40px;
     height: 360px;
     width: 360px;
     margin-bottom: 0;
 }
+
 .my-text {
     color: #ffffff;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size:1.2rem;
+    font-size: 1.2rem;
 }
 
 
-.container > h1 {
+.container>h1 {
     text-align: center;
     font-family: 'Rubik Bubbles', cursive;
     font-weight: 400;
@@ -105,13 +128,13 @@ body {
     color: #ffffff;
 }
 
-.container > h2 {
+.container>h2 {
     text-align: center;
     font-size: 2.0em;
     margin-top: 0;
 }
 
-.container > h3 {
+.container>h3 {
     text-align: center;
     font-family: 'Rubik Bubbles', cursive;
     font-weight: 400;
@@ -127,13 +150,14 @@ body {
     flex-direction: column;
 }
 
-input[type=text], input[type=password] {
-    border-radius:12px;
+input[type=text],
+input[type=password] {
+    border-radius: 12px;
     padding: 10px;
     margin-bottom: 20px;
 }
 
-.input-wrapper > button {
+.input-wrapper>button {
     padding: 10px;
     border: none;
     outline: none;
@@ -143,29 +167,35 @@ input[type=text], input[type=password] {
     color: whitesmoke;
 }
 
-    .input-wrapper > button:hover {
-        cursor: pointer;
-        background-color: #20b2aa;
-    }
+.input-wrapper>button:hover {
+    cursor: pointer;
+    background-color: #20b2aa;
+}
 
 .links-wrap {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: 15px;
-   
+
 }
 
-    .links-wrap > a:hover {
-        color:dodgerblue;
-        
-    }
+.links-wrap>a:hover {
+    color: dodgerblue;
+
+}
 
 .navcolor {
     color: cornflowerblue;
 }
+
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
         transform: translateY(0);
     }
 
@@ -177,6 +207,7 @@ input[type=text], input[type=password] {
         transform: translateY(-5px);
     }
 }
+
 .content-container {
     width: 100%;
     height: 100%;
@@ -187,41 +218,92 @@ input[type=text], input[type=password] {
     margin: 10px;
 }
 
-    .content-container .input-container {
-        display: flex;
-        align-items: center;
-    }
+.content-container .input-container {
+    display: flex;
+    align-items: center;
+}
 
-    .content-container input {
-        flex: 1;
-        border-radius: 10px;
-        padding: 10px 20px;
-        margin: 5px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
+.content-container input {
+    flex: 1;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
 
-    .content-container button {
-        background: rgb(119, 44, 232);
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 10px 20px;
-        margin: 5px;
-        cursor: pointer;
-    }
+.content-container button {
+    background: rgb(119, 44, 232);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+}
 
-    .content-container h2 {
-        margin-top: 20px;
-    }
+.content-container h2 {
+    margin-top: 20px;
+}
 
-    .content-container ul {
-        list-style-type: none;
-        padding: 0;
-        max-height: 400px;
-        overflow-y: scroll;
-    }
+.content-container ul {
+    list-style-type: none;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: scroll;
+}
 
-    .content-container hr {
-        border: 2px solid purple;
-        margin: 20px 0;
-    }
+.content-container hr {
+    border: 2px solid purple;
+    margin: 20px 0;
+}
+
+
+.primaryCont {
+    width: 600px;
+    height: 500px;
+    margin: 100px auto;
+    background: #fff;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.profileContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+.cards {
+    flex: 0 0 calc(40% - 20px);
+    max-width: calc(40% - 20px);
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
+}
+
+.profileTitle {
+    text-align: center;
+}
+
+.profilePic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.editPicbtn {
+    border-radius: 15px;
+}
