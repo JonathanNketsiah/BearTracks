@@ -1,9 +1,5 @@
 import React, { useRef, useState } from 'react';
-<<<<<<< HEAD
 // import { useNavigate } from 'react-router-dom';
-=======
-import { useNavigate } from 'react-router-dom';
->>>>>>> 844da76141dc5dcaf69ecfec8acb03f5dcdff661
 import './LoginFront.css'
 import Avatar from '@mui/material/Avatar';
 import defaultAvatar from './Assets/defaultAvatar.png'
