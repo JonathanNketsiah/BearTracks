@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 //import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+// import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import eventsData from './Assets/events.json';
 import SeatGeekEvents from './SeatGeekEvents';
 import seatgeekIcon from './Assets/seatgeek-marker.png'
