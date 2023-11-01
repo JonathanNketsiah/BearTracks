@@ -8,18 +8,24 @@ import Navbar from './components/Navbar'
 import Profile from './components/Profile'
 import Social from './components/Social'
 import About from './components/About'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NavbarStatus from './components/NavbarStatus'
+import ClipLoader from "react-spinners/ClipLoader"
 
 function App() {
    
-
+    const [loading, setLoading] = useState(false)
+        useEffect(() => {
+            setLoading(true)
+            setTimeout(() => { setLoading(false) }, 3000)
+         }, [])
     return (
         <>
             <NavbarStatus>
                 <Navbar />
             </NavbarStatus>
-            
+
+            loading? <ClipLoader color={'#D0021B'} loading={loading} size={100} /> :
             <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/signUp' element={<SignUp />} />
