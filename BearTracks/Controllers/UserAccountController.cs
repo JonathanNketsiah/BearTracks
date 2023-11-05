@@ -35,5 +35,15 @@ namespace BearTracks.Controllers
             else
                 return null;
         }
+
+        [HttpPost("retrieve")]
+        [Consumes("text/plain")]
+        public IActionResult? Retrieve([FromBody] string email)
+        {
+            if (_handler != null)
+                return _handler.RetrieveUser(email);
+            else
+                return null;
+        }
     }
 }

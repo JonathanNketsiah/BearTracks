@@ -141,5 +141,10 @@ namespace BearTracks.CoreLibrary.Databases
             }
             return new NotFoundResult();
         }
+
+        public IActionResult RetrieveUser(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
