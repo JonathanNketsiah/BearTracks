@@ -11,7 +11,7 @@ namespace BearTracks.Controllers
         private readonly ILogger<UserAccountController>? _logger;
         private IDatabaseService? _handler;
 
-        public UserAccountController(ILogger<UserAccountController>? logger, 
+        public UserAccountController(ILogger<UserAccountController>? logger,
                                      IDatabaseService? handler)
         {
             _logger = logger;
@@ -34,6 +34,36 @@ namespace BearTracks.Controllers
                 return _handler.CreateUser(model);
             else
                 return null;
+        }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromForm] IFormCollection formCollection)
+        {
+            if (_handler != null)
+            {
+                // Access individual form fields by their names
+                var update = new UpdateModelDTO
+                {
+                    FirstName = formCollection["firstName"],
+                    LastName = formCollection["lastName"],
+                    UserName = formCollection["userName"],
+                    Email = formCollection["email"],
+
+                    // Access the uploaded file as an IFormFile
+                    ProfilePic = formCollection.Files["profilePic"]
+                };
+
+                _handler.UpdateUser(update);
+
+                // Process the form data and file as needed
+                // You can save the file, update user data, etc.
+
+                return Ok("User updated successfully");
+            }
+            else
+            {
+                return BadRequest("Handler not available");
+            }
         }
 
         [HttpPost("retrieve")]

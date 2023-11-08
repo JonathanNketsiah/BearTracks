@@ -170,7 +170,7 @@ function MapPage() {
                     >AutoLocate
                     </button>
                 </div>
-                <div style={{ marginTop: '20px' }} style={{ display: locationInputted ? 'block' : 'none' }} >
+                <div style={{ marginTop: '20px', display: locationInputted ? 'block' : 'none' }} >
                     <h2>Events</h2>
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {events.map((event, index) => (

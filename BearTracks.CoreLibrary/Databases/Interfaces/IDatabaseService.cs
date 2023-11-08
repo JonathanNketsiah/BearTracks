@@ -10,5 +10,6 @@ namespace BearTracks.CoreLibrary.Databases.Interfaces
         IActionResult CreateUser(CreateModelDTO cModel);
         IActionResult DeleteUser(DeleteUserDTO delModel);
         IActionResult RetrieveUser(string email);
+        IActionResult UpdateUser(UpdateModelDTO uModel);
     }
 }

@@ -146,5 +146,10 @@ namespace BearTracks.CoreLibrary.Databases
         {
             throw new NotImplementedException();
         }
+
+        public IActionResult UpdateUser(UpdateModelDTO uModel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

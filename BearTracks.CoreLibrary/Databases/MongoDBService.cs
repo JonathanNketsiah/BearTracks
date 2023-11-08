@@ -19,6 +19,7 @@ namespace BearTracks.CoreLibrary.Databases
         private IMongoDatabase? _database;
         private IDbSecurityService _security_svc;
         private readonly string? _databaseName;
+        private const string P_KEY_VALUE = "Email";
 
         public MongoDBService(string? databaseName, string? connectionString, IDbSecurityService sec_svc)
         {
@@ -30,6 +31,8 @@ namespace BearTracks.CoreLibrary.Databases
 
         public IActionResult CreateUser(CreateModelDTO cModel)
         {
+            IActionResult response = new NotFoundResult();
+
             if (_database != null)
             {
                 if (REGEX.IsMatch(cModel.Email))
@@ -56,22 +59,11 @@ namespace BearTracks.CoreLibrary.Databases
                     if (result == null)
                     {
                         collection.InsertOne(user);
-                        return new OkResult();
-                    }
-                    else
-                    {
-                        return new NotFoundResult();
+                        response = new OkResult();
                     }
                 }
-                else
-                {
-                    return new NotFoundResult();
-                }
             }
-            else
-            {
-                return new NotFoundResult();
-            }
+            return response;
         }
 
 
@@ -151,8 +143,6 @@ namespace BearTracks.CoreLibrary.Databases
                         LastName = result.LastName,
                         UserName = result.UserName,
                         AccountPhoto = result.AccountPhoto
-                        // You may need to adjust this based on your actual user class
-                                          // Add other properties as needed
                     };
                     return new OkObjectResult(userDto);
                 }
@@ -161,6 +151,24 @@ namespace BearTracks.CoreLibrary.Databases
             }
             else
                 return new NotFoundResult();
+        }
+
+        public IActionResult UpdateUser(UpdateModelDTO uModel)
+        {
+            var collection = _database.GetCollection<User>("users");
+
+            var filter = Builders<User>.Filter.Eq(P_KEY_VALUE, uModel.Email);
+            
+            // Define the update operation
+            var update = Builders<User>.Update
+                .Set("FirstName", uModel.FirstName)
+                .Set("LastNamr", uModel.LastName)
+                .Set("UserName", uModel.UserName)
+                .Set("AccountPhoto", uModel.ProfilePic);
+            
+            var updateResult = collection.UpdateOne(filter, update);
+
+            return updateResult.ModifiedCount == 1 ? new OkResult() : new NotFoundResult();
         }
     }
 }

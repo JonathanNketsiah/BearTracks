@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { NavLink } from "react-router-dom";
-import "./LoginFront.css";
+import "./css/LoginFront.css";
 import BearLogo from "./Assets/BearLogo.png";
 
 //import { hashedPassword } from './SignUp.js'

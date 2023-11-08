@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { NavLink } from "react-router-dom";
-import "./LoginFront.css";
+import "./css/LoginFront.css";
 //import bcrypt from 'bcryptjs';
 
 const SignUp = () => {
@@ -33,7 +33,7 @@ const SignUp = () => {
           email: _email,
           userName: _userNm,
           password: _password,
-        })
+        }),
       });
       // Check if aacount creation was successful, then redirect if not
       if (response.ok) {
