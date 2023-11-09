@@ -4,9 +4,7 @@ using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections;
 using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -158,11 +156,11 @@ namespace BearTracks.CoreLibrary.Databases
             var collection = _database.GetCollection<User>("users");
 
             var filter = Builders<User>.Filter.Eq(P_KEY_VALUE, uModel.Email);
-            
+
             // Define the update operation
             var update = Builders<User>.Update
                 .Set("FirstName", uModel.FirstName)
-                .Set("LastNamr", uModel.LastName)
+                .Set("LastName", uModel.LastName)
                 .Set("UserName", uModel.UserName)
                 .Set("AccountPhoto", uModel.ProfilePic);
             

@@ -5,33 +5,36 @@ import Avatar from "@mui/material/Avatar";
 import defaultAvatar from "./Assets/defaultAvatar.png";
 import getCookie from "./CookieUtility"; // Import the getCookie function
 
-
 function Profile() {
   const imageRef = useRef(null);
   const [image, setImage] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null); // Store the selected file
-  let _profilePic = null;
+  const [accountPhoto, setAccountPhoto] = useState(""); // Updated to store the account photo
 
-  
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   useEffect(() => {
     const getUser = async () => {
       try {
         // Use the getCookie function to get the cookie value
-        const em2 = getCookie("email");
+        const userEmail = getCookie("email");
         const response = await fetch("account/retrieve", {
           method: "POST",
           headers: {
             "Content-Type": "text/plain",
           },
-          body: em2,
+          body: userEmail,
         });
 
         if (response.ok) {
           const userData = await response.json();
           console.log(userData);
           setData(userData);
+          setAccountPhoto(userData.accountPhoto); // Set accountPhoto from the retrieved data
+          setFirstName(userData.firstName);
+          setLastName(userData.lastName);
           setLoading(false);
         } else {
           console.error("Account retrieval failed");
@@ -44,45 +47,20 @@ function Profile() {
     getUser();
   }, []);
 
-  const handleClick = () => {
-    imageRef.current.click();
-  };
-
-  const handleSaveClick = () => {
-    const button = document.getElementById("saveButton");
-
+  async function updateUser(_email, _userName, profilePic) {
     try {
-      button.classList.add("pressedButton");
-
-      setTimeout(() => {
-        button.classList.remove("pressedButton");
-      }, 300); // Adjust the duration as needed for the animation
-    } catch {}
-
-    const firstNameValue = document.getElementById("firstName").innerText;
-    const lastNameValue = document.getElementById("lastName").innerText;
-    const emailValue = document.getElementById("email").innerText;
-    const userNameValue = document.getElementById("userName").innerText;
-
-    if (firstNameValue && lastNameValue && emailValue && userNameValue) {
-      updateUser(firstNameValue, lastNameValue, emailValue, userNameValue);
-    }
-  };
-
-  async function updateUser(_firstName, _lastName, _userName, _email) {
-    try {
-      const formData = new FormData();
-      formData.append("firstName", _firstName);
-      formData.append("lastName", _lastName);
-      formData.append("userName", _userName);
-      formData.append("email", _email);
-      if (selectedFile) {
-        formData.append("profilePic", selectedFile); // Add the selected file to the form data
-      }
-
       const response = await fetch("account/update", {
         method: "POST",
-        body: formData, // Send the form data
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: _email,
+          firstName: firstName,
+          lastName: lastName,
+          userName: _userName,
+          profilePic: profilePic,
+        }),
       });
 
       if (response.ok) {
@@ -99,11 +77,14 @@ function Profile() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+
       reader.onload = () => {
-        setImage(reader.result);
-        setSelectedFile(file); // Store the selected file
+        const base64Data = reader.result;
+        setAccountPhoto(base64Data); // Set accountPhoto with the selected image
+        setImage(base64Data); // Set the image state with the selected image
       };
+
+      reader.readAsDataURL(file);
 
       reader.onerror = (error) => {
         console.log("Error: ", error);
@@ -111,12 +92,39 @@ function Profile() {
     }
   };
 
+  const handleClick = () => {
+    imageRef.current.click();
+  };
+
+  const handleSaveClick = () => {
+    const button = document.getElementById("saveButton");
+
+    try {
+      button.classList.add("pressedButton");
+
+      setTimeout(() => {
+        button.classList.remove("pressedButton");
+      }, 300);
+    } catch {}
+
+    const emailValue = document.getElementById("email").innerText;
+    const userNameValue = document.getElementById("userName").innerText;
+
+    if (emailValue && userNameValue) {
+      updateUser(
+        emailValue,
+        userNameValue,
+        accountPhoto // Use the selected image from the file input
+      );
+    }
+  };
+
   return (
     <div>
       <h2 className="profileTitle">My Account</h2>
       <div className="profilePic">
-        {image ? (
-          <Avatar sx={{ width: 96, height: 96 }} src={image} />
+        {image || accountPhoto ? ( // Display the accountPhoto if available
+          <Avatar sx={{ width: 96, height: 96 }} src={image || accountPhoto} />
         ) : (
           <Avatar sx={{ width: 96, height: 96 }} src={defaultAvatar} />
         )}
@@ -134,23 +142,21 @@ function Profile() {
       <br></br>
       <div className="profileContainer">
         <div className="cards">
-          <p id="firstName">
-            {loading
-              ? "Loading data..."
-              : data
-              ? data.firstName
-              : "No data available"}
-          </p>
+          <input
+            type="text"
+            id="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
         </div>
 
         <div className="cards">
-          <p id="lastName">
-            {loading
-              ? "Loading data..."
-              : data
-              ? data.lastName
-              : "No data available"}
-          </p>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
         </div>
 
         <div className="cards">

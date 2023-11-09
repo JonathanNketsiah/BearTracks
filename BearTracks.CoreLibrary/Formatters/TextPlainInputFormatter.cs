@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
-using System;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 public class TextPlainInputFormatter : TextInputFormatter
 {

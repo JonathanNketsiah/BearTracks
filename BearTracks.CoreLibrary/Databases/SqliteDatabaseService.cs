@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;
 using System.Text;
 using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -34,7 +33,7 @@ namespace BearTracks.CoreLibrary.Databases
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
-                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), passwordHash varchar(50), salt varchar(50));";
+                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), passwordHash varchar(50), salt varchar(50), accountPhoto varchar(10000));";
                 var command = new SQLiteCommand(sql, connection);
                 command.ExecuteNonQuery();
             }
@@ -88,8 +87,8 @@ namespace BearTracks.CoreLibrary.Databases
                     var salt = _security_svc.CreateSALT();
                     var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
 
-                    string query = $"INSERT INTO {TABLE_NAME}(firstname, lastname, email, username, passwordHash, salt) " +
-                    $"SELECT @firstname, @lastname, LOWER(@email), @username, @passwordHash, @salt " +
+                    string query = $"INSERT INTO {TABLE_NAME}(firstname, lastname, email, username, passwordHash, salt, accountPhoto) " +
+                    $"SELECT @firstname, @lastname, LOWER(@email), @username, @passwordHash, @salt, null " +
                     $"WHERE NOT EXISTS (SELECT 1 FROM {TABLE_NAME} WHERE LOWER(email) = @email)";
 
                     connection.Open();
@@ -144,12 +143,89 @@ namespace BearTracks.CoreLibrary.Databases
 
         public IActionResult RetrieveUser(string email)
         {
-            throw new NotImplementedException();
+            if (email != String.Empty && _regex.IsMatch(email))
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    User userDto = null;
+                    string query = $"SELECT email, firstName, lastName, userName, accountPhoto from {TABLE_NAME} WHERE LOWER(email) = @email";
+                    connection.Open();
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SQLiteParameter("@email", email));
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var eml = reader.GetString(reader.GetOrdinal("email"));
+                                var firstName = reader.GetString(reader.GetOrdinal("firstName"));
+                                var lastName = reader.GetString(reader.GetOrdinal("lastName"));
+                                var userName = reader.GetString(reader.GetOrdinal("userName"));
+                                string accountPhoto = null;
+                                if (!reader.IsDBNull(reader.GetOrdinal("accountPhoto")))
+                                {
+                                    accountPhoto = reader.GetString(reader.GetOrdinal("accountPhoto"));
+                                    // Now you can safely use the accountPhoto string
+                                }
+                                else
+                                {
+                                    accountPhoto = null;
+                                }
+
+                                userDto = new User
+                                {
+                                    Email = eml,
+                                    FirstName = firstName,
+                                    LastName = lastName,
+                                    UserName = userName,
+                                    AccountPhoto = accountPhoto
+                                };
+                            }
+                        }
+                    }
+                    return new OkObjectResult(userDto);
+
+                }
+            }
+            else
+            {
+                return new NotFoundResult();
+            }
         }
 
         public IActionResult UpdateUser(UpdateModelDTO uModel)
         {
-            throw new NotImplementedException();
+            if (uModel.Email != null)
+            {
+                if (_regex.IsMatch(uModel.Email))
+                {
+                    using (var connection = new SQLiteConnection(_connectionString))
+                    {
+
+                        string query = $"UPDATE {TABLE_NAME} SET firstName = @firstName, lastName = @lastName, userName = @userName, accountPhoto = @accountPhoto WHERE LOWER(email) = @email;";
+
+                        connection.Open();
+                        using (var command = new SQLiteCommand(query, connection))
+                        {
+                            command.Parameters.Add(new SQLiteParameter("@email", uModel.Email.ToLower()));
+                            command.Parameters.Add(new SQLiteParameter("@firstName", uModel.FirstName));
+                            command.Parameters.Add(new SQLiteParameter("@lastName", uModel.LastName));
+                            command.Parameters.Add(new SQLiteParameter("@userName", uModel.UserName));
+                            command.Parameters.Add(new SQLiteParameter("@accountPhoto", uModel.ProfilePic));
+
+                            int updatedRows = command.ExecuteNonQuery();
+                            Console.WriteLine($"Rows Updated: {updatedRows}");
+
+                            if (updatedRows == 1)
+                                return new OkResult();
+                            else
+                                return new NotFoundResult();
+                        }
+                    }
+                }
+                return new NotFoundResult();
+            }
+            return new NotFoundResult();
         }
     }
 }

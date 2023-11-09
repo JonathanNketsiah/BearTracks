@@ -37,27 +37,11 @@ namespace BearTracks.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromForm] IFormCollection formCollection)
+        public IActionResult Update([FromBody] UpdateModelDTO model)
         {
             if (_handler != null)
             {
-                // Access individual form fields by their names
-                var update = new UpdateModelDTO
-                {
-                    FirstName = formCollection["firstName"],
-                    LastName = formCollection["lastName"],
-                    UserName = formCollection["userName"],
-                    Email = formCollection["email"],
-
-                    // Access the uploaded file as an IFormFile
-                    ProfilePic = formCollection.Files["profilePic"]
-                };
-
-                _handler.UpdateUser(update);
-
-                // Process the form data and file as needed
-                // You can save the file, update user data, etc.
-
+                _handler.UpdateUser(model);
                 return Ok("User updated successfully");
             }
             else
