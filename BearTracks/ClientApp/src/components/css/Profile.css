@@ -38,6 +38,11 @@
     animation: upAndDown 0.3s alternate;
     box-shadow: -4px 0 8px rgba(0, 0, 0, 0.6), 4px 0 8px rgba(0, 0, 0, 0.6); /* Pronounced left and right shadows for active state */
   }
+
+  .profilePic .MuiAvatar-root {
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.6), 4px 0 8px rgba(0, 0, 0, 0.6);
+  }
+
   
   @keyframes upAndDown {
     0%, 100% {
