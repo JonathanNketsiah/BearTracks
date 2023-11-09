@@ -124,9 +124,9 @@ function Profile() {
       <h2 className="profileTitle">My Account</h2>
       <div className="profilePic">
         {image || accountPhoto ? ( // Display the accountPhoto if available
-          <Avatar sx={{ width: 96, height: 96 }} src={image || accountPhoto} />
+          <Avatar sx={{ width: 128, height: 128 }} src={image || accountPhoto} />
         ) : (
-          <Avatar sx={{ width: 96, height: 96 }} src={defaultAvatar} />
+          <Avatar sx={{ width: 128, height: 128 }} src={defaultAvatar} />
         )}
       </div>
       <div onClick={handleClick} className="profilePic">
