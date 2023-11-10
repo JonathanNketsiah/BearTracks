@@ -1,4 +1,4 @@
-import "./NavBarStyle.css";
+import "./css/NavBarStyle.css";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React from "react";

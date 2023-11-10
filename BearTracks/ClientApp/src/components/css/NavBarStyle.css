@@ -16,6 +16,10 @@ nav {
     color: #ffffff;
     text-decoration: none;
     transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -ms-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
 }
 
 nav .title:hover,
@@ -53,7 +57,11 @@ nav .title.active::after {
         font-family: 'Roboto', sans-serif;
         color: #ffffff;
         transition: 0.2s ease-in-out;
-    }
+        -webkit-transition: 0.2s ease-in-out;
+        -moz-transition: 0.2s ease-in-out;
+        -ms-transition: 0.2s ease-in-out;
+        -o-transition: 0.2s ease-in-out;
+}
 
 #navbar li .link {
     text-decoration: none;
@@ -62,6 +70,10 @@ nav .title.active::after {
     font-family: 'Roboto', sans-serif;
     color: #ffffff;
     transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -ms-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
 }
 
     #navbar li .link:hover,
@@ -86,7 +98,11 @@ nav .title.active::after {
         border-radius: 10px;
         background-color: #20b2aa;
         color: whitesmoke;
-    }
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -o-border-radius: 10px;
+}
 
         #navbar .button:hover {
             cursor: pointer;

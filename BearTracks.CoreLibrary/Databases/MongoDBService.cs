@@ -4,9 +4,7 @@ using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections;
 using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -19,6 +17,7 @@ namespace BearTracks.CoreLibrary.Databases
         private IMongoDatabase? _database;
         private IDbSecurityService _security_svc;
         private readonly string? _databaseName;
+        private const string P_KEY_VALUE = "Email";
 
         public MongoDBService(string? databaseName, string? connectionString, IDbSecurityService sec_svc)
         {
@@ -30,40 +29,41 @@ namespace BearTracks.CoreLibrary.Databases
 
         public IActionResult CreateUser(CreateModelDTO cModel)
         {
+            IActionResult response = new NotFoundResult();
+
             if (_database != null)
             {
                 if (REGEX.IsMatch(cModel.Email))
                 {
-                    var filter = Builders<BsonDocument>.Filter.And(
-                        Builders<BsonDocument>.Filter.Eq("Email", cModel.Email)); // Filter by Email value
-
+                    var filter = Builders<User>.Filter.Eq(u => u.Email, cModel.Email);
                     var salt = _security_svc.CreateSALT();
                     var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
-                    var dataModel = new CreateModelHashingWrapperDTO().Wrap(cModel, passwordHash, Convert.ToBase64String(salt));
-                    var collection = _database.GetCollection<BsonDocument>("users");
 
-                    // Create a document and insert it into the collection
-                    var document = dataModel.ToBsonDocument();
-                    try
+                    var user = new User
                     {
-                        var result = collection.Find(filter).FirstOrDefault();
-                        if (result == null)
-                        {
-                            collection.InsertOneAsync(document);
-                            return new OkResult();
-                        }
-                        else
-                            return new NotFoundResult();
-                    }
-                    catch (Exception)
+                        FirstName = cModel.FirstName,
+                        LastName = cModel.LastName,
+                        Email = cModel.Email,
+                        UserName = cModel.UserName,
+                        PasswordHash = passwordHash,
+                        SALT = Convert.ToBase64String(salt),
+                        AccountPhoto = null
+                    };
+
+                    // Insert the User object into the collection
+                    var collection = _database.GetCollection<User>("users");
+                    var result = collection.Find(filter).FirstOrDefault();
+
+                    if (result == null)
                     {
-                        return new NotFoundResult();
+                        collection.InsertOne(user);
+                        response = new OkResult();
                     }
                 }
-                else return new NotFoundResult();
             }
-            else return new NotFoundResult();
+            return response;
         }
+
 
         public IActionResult LoginUser(LoginModelDTO lModel)
         {
@@ -118,6 +118,55 @@ namespace BearTracks.CoreLibrary.Databases
             }
             else
                 return new NotFoundResult();
+        }
+
+        public IActionResult RetrieveUser(string email)
+        {
+            if (_database != null)
+            {
+                var collection = _database.GetCollection<User>("users");
+                var filter = Builders<User>.Filter.And(
+                        Builders<User>.Filter.Eq("Email", email));
+
+                // Delete the document
+                var result = collection.Find(filter).FirstOrDefault();
+                //var userData = new { Email = result.email, Name = "John Doe" };
+
+                if (result != null)
+                {
+                    var userDto = new User
+                    {
+                        Email = result.Email,
+                        FirstName = result.FirstName,
+                        LastName = result.LastName,
+                        UserName = result.UserName,
+                        AccountPhoto = result.AccountPhoto
+                    };
+                    return new OkObjectResult(userDto);
+                }
+                else
+                    return new NotFoundResult();
+            }
+            else
+                return new NotFoundResult();
+        }
+
+        public IActionResult UpdateUser(UpdateModelDTO uModel)
+        {
+            var collection = _database.GetCollection<User>("users");
+
+            var filter = Builders<User>.Filter.Eq(P_KEY_VALUE, uModel.Email);
+
+            // Define the update operation
+            var update = Builders<User>.Update
+                .Set("FirstName", uModel.FirstName)
+                .Set("LastName", uModel.LastName)
+                .Set("UserName", uModel.UserName)
+                .Set("AccountPhoto", uModel.ProfilePic);
+            
+            var updateResult = collection.UpdateOne(filter, update);
+
+            return updateResult.ModifiedCount == 1 ? new OkResult() : new NotFoundResult();
         }
     }
 }
