@@ -1,4 +1,5 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
+using BearTracks.CoreLibrary.Databases.MongoObjects;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace BearTracks.CoreLibrary.Databases
 {
     public class SqliteDatabaseService : IDatabaseService
     {
-        private const string TABLE_NAME = "users";
+        private readonly string[] TABLE_NAME = { "users", "accountPhotos" };
         //REGEX PATTERN for email address
         //This check needs to occur in the View as well,
         //but adding this to prevent any other direct calls to the API
@@ -33,8 +34,12 @@ namespace BearTracks.CoreLibrary.Databases
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
-                var sql = $"Create Table IF NOT EXISTS {TABLE_NAME} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), passwordHash varchar(50), salt varchar(50), accountPhoto varchar(10000));";
+                var sql = $"CREATE TABLE IF NOT EXISTS {TABLE_NAME[0]} (firstname varchar (50), lastname varchar (50), email varchar (50), username varchar (50), passwordHash varchar(50), salt varchar(50));";
                 var command = new SQLiteCommand(sql, connection);
+                command.ExecuteNonQuery();
+
+                sql = $"CREATE TABLE IF NOT EXISTS {TABLE_NAME[1]} (email varchar (50), accountPhoto varchar(10000));";
+                command = new SQLiteCommand(sql, connection);
                 command.ExecuteNonQuery();
             }
         }
@@ -48,7 +53,7 @@ namespace BearTracks.CoreLibrary.Databases
                 using (var connection = new SQLiteConnection(_connectionString))
                 {
 
-                    string query = $"SELECT * FROM {TABLE_NAME} WHERE LOWER(email) = @email";
+                    string query = $"SELECT * FROM {TABLE_NAME[0]} WHERE LOWER(email) = @email";
                     StringBuilder storedPasswordHash = new StringBuilder();
                     byte[] salt = new byte[0];
 
@@ -87,11 +92,20 @@ namespace BearTracks.CoreLibrary.Databases
                     var salt = _security_svc.CreateSALT();
                     var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
 
-                    string query = $"INSERT INTO {TABLE_NAME}(firstname, lastname, email, username, passwordHash, salt, accountPhoto) " +
-                    $"SELECT @firstname, @lastname, LOWER(@email), @username, @passwordHash, @salt, null " +
-                    $"WHERE NOT EXISTS (SELECT 1 FROM {TABLE_NAME} WHERE LOWER(email) = @email)";
+                    string query = $"INSERT INTO {TABLE_NAME[1]}(email, accountPhoto) SELECT @email, null WHERE NOT EXISTS (SELECT 1 FROM {TABLE_NAME[1]} WHERE LOWER(email) = @email)";
 
                     connection.Open();
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        //Add the parameters below provides rudimentary screening for things like sql injection
+                        command.Parameters.Add(new SQLiteParameter("@email", cModel.Email));
+                        command.ExecuteNonQuery();
+                    }
+
+                    query = $"INSERT INTO {TABLE_NAME[0]}(firstname, lastname, email, username, passwordHash, salt) " +
+                        $"SELECT @firstname, @lastname, LOWER(@email), @username, @passwordHash, @salt " +
+                        $"WHERE NOT EXISTS (SELECT 1 FROM {TABLE_NAME[0]} WHERE LOWER(email) = @email)";
+
                     using (var command = new SQLiteCommand(query, connection))
                     {
                         //Add the parameters below provides rudimentary screening for things like sql injection
@@ -122,7 +136,15 @@ namespace BearTracks.CoreLibrary.Databases
                     using (var connection = new SQLiteConnection(_connectionString))
                     {
 
-                        string query = $"DELETE FROM {TABLE_NAME} WHERE LOWER(email) = @email";
+                        string query = $"DELETE FROM {TABLE_NAME[1]} WHERE LOWER(email) = @email";
+                        connection.Open();
+                        using (var command = new SQLiteCommand(query, connection))
+                        {
+                            command.Parameters.Add(new SQLiteParameter("@email", delModel.Email));
+                            int deletedRows = command.ExecuteNonQuery();
+                        }
+
+                        query = $"DELETE FROM {TABLE_NAME[0]} WHERE LOWER(email) = @email";
                         connection.Open();
                         using (var command = new SQLiteCommand(query, connection))
                         {
@@ -147,8 +169,9 @@ namespace BearTracks.CoreLibrary.Databases
             {
                 using (var connection = new SQLiteConnection(_connectionString))
                 {
-                    User userDto = null;
-                    string query = $"SELECT email, firstName, lastName, userName, accountPhoto from {TABLE_NAME} WHERE LOWER(email) = @email";
+                    UserReturnObjectDTO returnDto = new UserReturnObjectDTO();
+                    
+                    string query = $"SELECT email, firstName, lastName, userName from {TABLE_NAME[0]} WHERE LOWER(email) = @email";
                     connection.Open();
                     using (var command = new SQLiteCommand(query, connection))
                     {
@@ -161,30 +184,42 @@ namespace BearTracks.CoreLibrary.Databases
                                 var firstName = reader.GetString(reader.GetOrdinal("firstName"));
                                 var lastName = reader.GetString(reader.GetOrdinal("lastName"));
                                 var userName = reader.GetString(reader.GetOrdinal("userName"));
-                                string accountPhoto = null;
-                                if (!reader.IsDBNull(reader.GetOrdinal("accountPhoto")))
-                                {
-                                    accountPhoto = reader.GetString(reader.GetOrdinal("accountPhoto"));
-                                    // Now you can safely use the accountPhoto string
-                                }
-                                else
-                                {
-                                    accountPhoto = null;
-                                }
-
-                                userDto = new User
+                                
+                                returnDto.User = new UserBSON
                                 {
                                     Email = eml,
                                     FirstName = firstName,
                                     LastName = lastName,
                                     UserName = userName,
-                                    AccountPhoto = accountPhoto
                                 };
                             }
                         }
                     }
-                    return new OkObjectResult(userDto);
-
+                    
+                    query = $"SELECT * from {TABLE_NAME[1]} WHERE LOWER(email) = @email";
+                    
+                    using (var command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SQLiteParameter("@email", email));
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var eml = reader.GetString(reader.GetOrdinal("email"));
+                                string accountPhoto = null;
+                                if (!reader.IsDBNull(reader.GetOrdinal("accountPhoto")))
+                                {
+                                    returnDto.accountPhoto = reader.GetString(reader.GetOrdinal("accountPhoto"));
+                                    // Now you can safely use the accountPhoto string
+                                }
+                                else
+                                {
+                                    returnDto.accountPhoto = null;
+                                }
+                            }
+                        }
+                    }
+                    return new OkObjectResult(returnDto);
                 }
             }
             else
@@ -202,19 +237,28 @@ namespace BearTracks.CoreLibrary.Databases
                     using (var connection = new SQLiteConnection(_connectionString))
                     {
 
-                        string query = $"UPDATE {TABLE_NAME} SET firstName = @firstName, lastName = @lastName, userName = @userName, accountPhoto = @accountPhoto WHERE LOWER(email) = @email;";
+                        string query = $"UPDATE {TABLE_NAME[1]} SET accountPhoto = @accountPhoto WHERE LOWER(email) = @email;";
 
                         connection.Open();
+                        using (var command = new SQLiteCommand(query, connection))
+                        {
+                            command.Parameters.Add(new SQLiteParameter("@email", uModel.Email.ToLower()));
+                            command.Parameters.Add(new SQLiteParameter("@accountPhoto", uModel.ProfilePic));
+                            int updatedRows = command.ExecuteNonQuery();
+                            Console.WriteLine($"Rows Updated: {updatedRows}");
+                        }
+
+                        query = $"UPDATE {TABLE_NAME[0]} SET firstName = @firstName, lastName = @lastName, userName = @userName WHERE LOWER(email) = @email;";
+
                         using (var command = new SQLiteCommand(query, connection))
                         {
                             command.Parameters.Add(new SQLiteParameter("@email", uModel.Email.ToLower()));
                             command.Parameters.Add(new SQLiteParameter("@firstName", uModel.FirstName));
                             command.Parameters.Add(new SQLiteParameter("@lastName", uModel.LastName));
                             command.Parameters.Add(new SQLiteParameter("@userName", uModel.UserName));
-                            command.Parameters.Add(new SQLiteParameter("@accountPhoto", uModel.ProfilePic));
-
+                            
                             int updatedRows = command.ExecuteNonQuery();
-                            Console.WriteLine($"Rows Updated: {updatedRows}");
+                            Console.WriteLine($"Rows Updated: {updatedRows} Size: {uModel.ProfilePic.Length}");
 
                             if (updatedRows == 1)
                                 return new OkResult();

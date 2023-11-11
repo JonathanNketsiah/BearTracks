@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-public class User
+public class UserBSON
 {
     public ObjectId Id { get; set; }
     public string? FirstName { get; set; }
@@ -9,6 +9,4 @@ public class User
     public string? UserName { get; set; }
     public string? PasswordHash { get; set; }
     public string? SALT { get; set; }
-    public string? AccountPhoto { get; set; }
-
 }
