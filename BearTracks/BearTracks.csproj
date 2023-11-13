@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="ClientApp\src\components\CreateEvent.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BearTracks.CoreLibrary\BearTracks.CoreLibrary.csproj" />
   </ItemGroup>
 
