@@ -1,12 +1,11 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
+using BearTracks.CoreLibrary.Databases.MongoObjects;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections;
 using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
 
 namespace BearTracks.CoreLibrary.Databases
 {
@@ -19,6 +18,7 @@ namespace BearTracks.CoreLibrary.Databases
         private IMongoDatabase? _database;
         private IDbSecurityService _security_svc;
         private readonly string? _databaseName;
+        private const string P_KEY_VALUE = "Email";
 
         public MongoDBService(string? databaseName, string? connectionString, IDbSecurityService sec_svc)
         {
@@ -30,40 +30,49 @@ namespace BearTracks.CoreLibrary.Databases
 
         public IActionResult CreateUser(CreateModelDTO cModel)
         {
+            IActionResult response = new NotFoundResult();
+
             if (_database != null)
             {
                 if (REGEX.IsMatch(cModel.Email))
                 {
-                    var filter = Builders<BsonDocument>.Filter.And(
-                        Builders<BsonDocument>.Filter.Eq("Email", cModel.Email)); // Filter by Email value
-
+                    var filter = Builders<UserBSON>.Filter.Eq(u => u.Email, cModel.Email);
                     var salt = _security_svc.CreateSALT();
                     var passwordHash = _security_svc.HashPassword(cModel.Password, salt);
-                    var dataModel = new CreateModelHashingWrapperDTO().Wrap(cModel, passwordHash, Convert.ToBase64String(salt));
-                    var collection = _database.GetCollection<BsonDocument>("users");
 
-                    // Create a document and insert it into the collection
-                    var document = dataModel.ToBsonDocument();
-                    try
+                    var user = new UserBSON
                     {
-                        var result = collection.Find(filter).FirstOrDefault();
-                        if (result == null)
-                        {
-                            collection.InsertOneAsync(document);
-                            return new OkResult();
-                        }
-                        else
-                            return new NotFoundResult();
-                    }
-                    catch (Exception)
+                        FirstName = cModel.FirstName,
+                        LastName = cModel.LastName,
+                        Email = cModel.Email,
+                        UserName = cModel.UserName,
+                        PasswordHash = passwordHash,
+                        SALT = Convert.ToBase64String(salt),
+                    };
+
+                    var accountPhoto = new AccountPhotoBSON
                     {
-                        return new NotFoundResult();
+                        Email = cModel.Email,
+                        AccountPhoto = null
+                    };
+
+                    // Insert the User object into the collection
+                    var collection = _database.GetCollection<UserBSON>("users");
+                    var photoCollection = _database.GetCollection<AccountPhotoBSON>("accountPhotos");
+                    
+                    var result = collection.Find(filter).FirstOrDefault();
+
+                    if (result == null)
+                    {
+                        collection.InsertOne(user);
+                        photoCollection.InsertOne(accountPhoto);
+                        response = new OkResult();
                     }
                 }
-                else return new NotFoundResult();
             }
-            else return new NotFoundResult();
+            return response;
         }
+
 
         public IActionResult LoginUser(LoginModelDTO lModel)
         {
@@ -118,6 +127,71 @@ namespace BearTracks.CoreLibrary.Databases
             }
             else
                 return new NotFoundResult();
+        }
+
+        public IActionResult RetrieveUser(string email)
+        {
+            if (_database != null)
+            {
+                //Pull in users associated account photos
+                var userCollection = _database.GetCollection<BsonDocument>("users");
+                var photoCollection = _database.GetCollection<BsonDocument>("accountPhotos");
+                var filter = Builders<BsonDocument>.Filter.And(
+                        Builders<BsonDocument>.Filter.Eq("Email", email));
+                
+                // Results with the given email
+                var userResult = userCollection.Find(filter).FirstOrDefault();
+                var photoResult = photoCollection.Find(filter).FirstOrDefault();
+                
+                string accntphoto = null;
+                if (userResult != null)
+                {
+                    if (photoResult.Contains("AccountPhoto") && !photoResult["AccountPhoto"].IsBsonNull)
+                    {
+                        accntphoto = photoResult["AccountPhoto"].AsString;
+                    }
+
+                    var returnObject = new UserReturnObjectDTO
+                    {
+                        User = new UserBSON
+                        {
+                            Email = userResult["Email"].AsString,
+                            FirstName = userResult["FirstName"].AsString,
+                            LastName = userResult["LastName"].AsString,
+                            UserName = userResult["UserName"].AsString,
+                        },
+                        accountPhoto = accntphoto
+                    };
+                    return new OkObjectResult(returnObject);
+                }
+                else
+                    return new NotFoundResult();
+            }
+            else
+                return new NotFoundResult();
+        }
+
+        public IActionResult UpdateUser(UpdateModelDTO uModel)
+        {
+            var collection = _database.GetCollection<UserBSON>("users");
+            var photoCollection = _database.GetCollection<AccountPhotoBSON>("accountPhotos");
+
+            var filter = Builders<UserBSON>.Filter.Eq(P_KEY_VALUE, uModel.Email);
+            var photoFilter = Builders<AccountPhotoBSON>.Filter.Eq(P_KEY_VALUE, uModel.Email);
+
+            // Define the update operation
+            var updateUser = Builders<UserBSON>.Update
+                .Set("FirstName", uModel.FirstName)
+                .Set("LastName", uModel.LastName)
+                .Set("UserName", uModel.UserName);
+
+            var updatePhoto = Builders<AccountPhotoBSON>.Update
+                .Set("AccountPhoto", uModel.ProfilePic);
+
+            var updateResult = collection.UpdateOne(filter, updateUser);
+            var updatePhotoResult = photoCollection.UpdateOne(photoFilter, updatePhoto);
+
+            return updateResult.ModifiedCount == 1 ? new OkResult() : new NotFoundResult();
         }
     }
 }

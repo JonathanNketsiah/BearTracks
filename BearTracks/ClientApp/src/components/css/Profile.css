@@ -1,0 +1,63 @@
+.buttonDefaultStyle {
+    background-color: rgb(127, 0, 255);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 30px;
+    display: block;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Add box shadow for normal state */
+  }
+  
+  .buttonDefaultStyle:active {
+    animation: upAndDown 0.3s alternate;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.6), 4px 0 8px rgba(0, 0, 0, 0.6); /* Pronounced left and right shadows for active state */
+  }
+
+.buttonDefaultStyle2 {
+    background-color: rgb(127, 0, 255);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    /*Addboxshadowfornormalstate*/ -webkit-border-radius: 10px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+  
+  .buttonDefaultStyle2:active {
+    animation: upAndDown 0.3s alternate;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.6), 4px 0 8px rgba(0, 0, 0, 0.6); /* Pronounced left and right shadows for active state */
+  }
+
+  .profilePic .MuiAvatar-root {
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.6), 4px 0 8px rgba(0, 0, 0, 0.6);
+  }
+
+  
+  @keyframes upAndDown {
+    0%, 100% {
+      transform: translateY(0);
+      -webkit-transform: translateY(0);
+      -moz-transform: translateY(0);
+      -ms-transform: translateY(0);
+      -o-transform: translateY(0);
+}
+      
+    50% {
+      transform: translateY(5px);
+    }
+  }
+  

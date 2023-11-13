@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Bubbles&display=swap');
+
+.active {
+    background-color: seagreen;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(127, 0, 255);
+    padding: 10px 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.title {
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: #ffffff;
+    display: block;
+    list-style: none;
+    display: block;
+    padding: 0.4rem;
+    margin: 0 0.4rem;
+    border-radius: 0.7rem;
+}
+
+    .title:not(.active):hover {
+        background-color: lightseagreen;
+    }
+
+
+
+
+#navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    #navbar li {
+        list-style: none;
+        padding: 0 20px;
+        position: relative;
+    }
+
+
+
+        #navbar li .link {
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            border-radius: 0.7rem;
+            display: block;
+            padding: 0.4rem;
+            margin: 0 0.4rem;
+        }
+
+            #navbar li .link:not(.active):hover {
+                background-color: lightseagreen;
+            }
+
+
+    #navbar button {
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        background-color: seagreen;
+        color: whitesmoke;
+    }
+
+    #navbar .button:hover {
+        cursor: pointer;
+    }
