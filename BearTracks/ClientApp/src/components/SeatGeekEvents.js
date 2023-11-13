@@ -8,7 +8,7 @@ function SeatGeekEvents({ userLocation, setEventsOnMap }) {
         if (userLocation) {
             // Fetch events from SeatGeek API here
             const apiKey = 'Mzc3OTM4NTV8MTY5ODI0OTAwOS40MTYyNzUz';
-            const seatGeekUrl = `https://api.seatgeek.com/2/events?geoip=false&lat=${userLocation.lat}&lon=${userLocation.lng}&client_id=${apiKey}&per_page=5`;
+            const seatGeekUrl = `https://api.seatgeek.com/2/events?geoip=false&lat=${userLocation.lat}&lon=${userLocation.lng}&client_id=${apiKey}`;
 
             fetch(seatGeekUrl)
                 .then((response) => response.json())
@@ -34,7 +34,7 @@ function SeatGeekEvents({ userLocation, setEventsOnMap }) {
                         const distance = radius * c;
 
                         const miles = distance * 0.621371; // Convert kilometers to miles
-                        return miles <= 50;
+                        return miles <= 1000;
                     });
 
                     setSeatGeekEvents(filteredEvents);
@@ -49,11 +49,11 @@ function SeatGeekEvents({ userLocation, setEventsOnMap }) {
     return (
         <div>
             <h2>SeatGeek Events</h2>
-            <div style={{ overflowY: 'scroll', maxHeight: '400px' }}>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <div>
+                <ul style={{ listStyleType: 'none'}}>
                 {seatGeekEvents.map((event, index) => (
                     <li key={index} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc' }}>
-                        <h3>{event.title}</h3>
+                        <h2>{event.title}</h2>
                         <p>{event.venue.address}</p>
                         {/* Add a clickable icon that redirects to Google Maps for navigation */}
                         <a

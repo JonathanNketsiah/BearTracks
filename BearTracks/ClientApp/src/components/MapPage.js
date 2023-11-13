@@ -7,6 +7,7 @@ import eventsData from './Assets/events.json';
 import SeatGeekEvents from './SeatGeekEvents';
 import seatgeekIcon from './Assets/seatgeek-marker.png'
 import logo from './Assets/logo.png'; 
+import EventFormModal from './CreateEvent.js';
 
 const center = {
     lat: 0,
@@ -23,7 +24,15 @@ function MapPage() {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [mapLogoVisible, setMapLogoVisible] = useState(true);
     const [locationInputted, setLocationInputted] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('option1');
+    const [showModal, setShowModal] = useState(false);
 
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    };
+    const handleOptionChange = (option) => {
+        setSelectedOption(option);
+    };
     const handleEventMarkerClickSG = (event) => {
         setSelectedMarker(event);
     };
@@ -115,7 +124,7 @@ function MapPage() {
             elementType: 'labels.icon',
             stylers: [
                 {
-                    visibility: 'off',
+                    visibility: 'on',
                 },
             ],
         },
@@ -148,7 +157,7 @@ function MapPage() {
     return (
         <div style={pageStyle}>
 
-            <div style={listStyle}>
+            <div style={{ ...listStyle, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={buttonContainerStyle}>
                     <input
                         type="text"
@@ -170,23 +179,66 @@ function MapPage() {
                     >AutoLocate
                     </button>
                 </div>
-                <div style={{ marginTop: '20px' }} style={{ display: locationInputted ? 'block' : 'none' }} >
-                    <h2>Events</h2>
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        {events.map((event, index) => (
-                            <li key={index}
-                                style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', cursor: 'pointer' }}
-                                onClick={() => setSelectedListEvent(event)}>
-                                <h3>{event.name}</h3>
-                                <p>{event.location}</p>
-                            </li>
-                        ))}
+                <hr></hr>
+                <div>
+                    <ul className="nav-bar">
+                        <li
+                            onClick={() => handleOptionChange('option1')}
+                            className={selectedOption === 'option1' ? 'selected' : ''}
+                        >
+                        BearTracks Events
+                        </li>
+                        <li
+                            onClick={() => handleOptionChange('option2')}
+                            className={selectedOption === 'option2' ? 'selected' : ''}
+                        >
+                            SeatGeek Events
+                        </li>
+                        <li
+                            onClick={() => handleOptionChange('option3')}
+                            className={selectedOption === 'option3' ? 'selected' : ''}
+                        >
+                            Places of Intrest
+                        </li>
                     </ul>
-                    <hr style={{ border: '3px solid black', margin: '20px 0' }} />
-                    <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
+                    <div style={{ marginTop: '20px' }} style={{ display: locationInputted ? 'block' : 'none' }}>
+                        {/* Render content based on the selected option */}
+                        {selectedOption === 'option1' && (
+                            <div className="scrollable-content">
+                            <h2>BearTracks Events</h2>
+                                {/* Add content for Option 1 here */}
+                                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                    {events.map((event, index) => (
+                                        <li key={index}
+                                            style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', cursor: 'pointer' }}
+                                            onClick={() => setSelectedListEvent(event)}>
+                                            <h3>{event.name}</h3>
+                                            <p>{event.location}</p>
+                                        </li>
+                                    ))}
+                                </ul>
 
+                            </div>
+                        )}
+                        {selectedOption === 'option2' && (
+                            <div className="scrollable-content">
+                                {/* Add content for Option 2 here */}
+                                <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
+                            </div>
+                        )}
+                        {selectedOption === 'option3' && (
+                            <div>
+                                {/* Add content for Option 3 here */}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div>
+                    <button style={buttonStyle} onClick={toggleModal}>Create Event</button>
+                    <EventFormModal show={showModal} handleClose={toggleModal} />
                 </div>
             </div>
+
 
             <div style={{...mapStyle, ...mapInnerContainerStyle}}>
                 <LoadScript googleMapsApiKey="AIzaSyDyu1Rvu4vbvohcfXexBH1i9fVPcsA8-yA">
