@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/BearTracks.CoreLibrary/bin/Debug/net6.0
+/BearTracks.CoreLibrary/obj
+/BearTracks.Tests/bin/Debug/net6.0
+/BearTracks.Tests/obj/Debug/net6.0
+/BearTracks.Tests/obj
