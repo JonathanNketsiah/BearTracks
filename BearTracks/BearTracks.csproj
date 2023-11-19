@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\StyleSheet.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BearTracks.CoreLibrary\BearTracks.CoreLibrary.csproj" />
   </ItemGroup>
 
