@@ -40,10 +40,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="app.yaml" CopyToOutputDirectory="PreserveNewest" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Reference Include="System.Data.SQLite">
 			<HintPath>SQLite\System.Data.SQLite.dll</HintPath>
 		</Reference>
