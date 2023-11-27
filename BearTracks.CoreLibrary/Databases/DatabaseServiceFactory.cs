@@ -34,6 +34,12 @@ namespace BearTracks.CoreLibrary.Databases
                         _configuration.GetConnectionString("MongoDBConnection"), 
                         _security_svc);
                 }
+                else if (databaseType == "SqlServer")
+                {
+                    return new SqlServerDatabaseService(
+                        _configuration.GetConnectionString("SqlServerConnection"),
+                        _security_svc);
+                }
                 else
                 {
                     throw new InvalidOperationException("Invalid database type specified in appropriate appsettings.json file");

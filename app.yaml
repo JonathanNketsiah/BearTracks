@@ -1,0 +1,21 @@
+runtime: aspnetcore
+env: flex
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  target_throughput_utilization: 0.65
+  min_num_instances: 1
+  max_num_instances: 10
+  cool_down_period_sec: 120
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+env_variables:
+  ASPNETCORE_ENVIRONMENT: production
+  ASPNETCORE_URLS: http://0.0.0.0:8080
+  Database__DatabaseName: "Beartracks"
+  Database__ConnectionStrings__SqliteConnection: "Data Source=Beartracks.sqlite;Version=3;"
+  Database__ConnectionStrings__MongoDbConnection: "mongodb+srv://Beartracks:Beartracks@cluster0.ori0pnd.mongodb.net/"
