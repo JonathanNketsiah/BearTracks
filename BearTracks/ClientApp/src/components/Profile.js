@@ -19,7 +19,7 @@ function Profile() {
         const getUser = async () => {
             try {
                 // Use the getCookie function to get the cookie value
-                const userEmail = getCookie("email");
+                const userEmail = "test@test.com"//getCookie("email");
                 const response = await fetch("account/retrieve", {
                     method: "POST",
                     headers: {
