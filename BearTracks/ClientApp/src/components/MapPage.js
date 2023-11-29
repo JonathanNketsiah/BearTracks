@@ -206,7 +206,6 @@ function MapPage() {
                         {selectedOption === 'option1' && (
                             <div className="scrollable-content">
                             <h2>BearTracks Events</h2>
-                                {/* Add content for Option 1 here */}
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                                     {events.map((event, index) => (
                                         <li key={index}
@@ -222,13 +221,11 @@ function MapPage() {
                         )}
                         {selectedOption === 'option2' && (
                             <div className="scrollable-content">
-                                {/* Add content for Option 2 here */}
                                 <SeatGeekEvents userLocation={userLocation} setEventsOnMap={setEventsOnMap} />
                             </div>
                         )}
                         {selectedOption === 'option3' && (
                             <div>
-                                {/* Add content for Option 3 here */}
                             </div>
                         )}
                     </div>

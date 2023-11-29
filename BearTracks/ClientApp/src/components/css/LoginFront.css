@@ -350,3 +350,19 @@ input[type=password] {
     display: flex;
     flex-direction: column;
 }
+.nav-bar {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+}
+
+    .nav-bar li {
+        border: 1px solid #ccc;
+        cursor: pointer;
+        padding: 8px 16px;
+        margin-right: 10px;
+    }
+
+        .nav-bar li.selected {
+            background-color: #f0f0f0
+        }
