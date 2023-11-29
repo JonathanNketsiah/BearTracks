@@ -8,3 +8,5 @@
 /BearTracks.Tests/bin/Debug/net6.0
 /BearTracks.Tests/obj/Debug/net6.0
 /BearTracks.Tests/obj
+/BearTracks.Tests/bin/Release/net6.0
+/BearTracks.CoreLibrary/bin/Release/net6.0

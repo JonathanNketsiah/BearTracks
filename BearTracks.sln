@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BearTracks", "BearTracks\Be
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BearTracks.CoreLibrary", "BearTracks.CoreLibrary\BearTracks.CoreLibrary.csproj", "{38663159-FC89-4495-A574-545619070F76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BearTracks.Tests", "BearTracks.Tests\BearTracks.Tests.csproj", "{B5E6B3F4-2CDE-47BF-A373-6013FF1D630F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BearTracks.Tests", "BearTracks.Tests\BearTracks.Tests.csproj", "{B5E6B3F4-2CDE-47BF-A373-6013FF1D630F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,10 +21,13 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+        if (app.Environment.IsProduction())
         {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios.
+            app.UseExceptionHandler("/Home/Error");
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+
             app.UseHsts();
+            // Configure other security-related middleware
         }
 
         app.UseHttpsRedirection();
