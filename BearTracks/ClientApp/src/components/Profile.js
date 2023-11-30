@@ -137,25 +137,30 @@ function Profile() {
                     onChange={handleBase64}
                     style={{ display: "none" }}
                 />
-                <button onClick={handleClick} className="buttonDefaultStyle2">Edit Profile Photo</button>
-                <button onClick={handleClick} className="buttonDefaultStyle2">Edit Account Info</button>
+                <button onClick={handleClick} className="buttonDefaultStyle2">Set Profile Photo</button>
             </div>
             <br></br>
             <div className="profileContainer">
-                <div className="nameField">
-                    <p className="label">Name:</p>
-                    <p className="value" id="userName">
-                        {loading
-                            ? "Loading data..."
-                            : data
-                                ? `${data.user.firstName} ${data.user.lastName}`
-                                : "No data available"}
-                    </p>
+                <div className="cards">
+                    <input
+                        type="text"
+                        id="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
                 </div>
 
-                <div className="nameField">
-                    <p className="label">Email:</p>
-                    <p className="value" id="email">
+                <div className="cards">
+                    <input
+                        type="text"
+                        id="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+
+                <div className="cards">
+                    <p id="email">
                         {loading
                             ? "Loading data..."
                             : data
@@ -164,9 +169,8 @@ function Profile() {
                     </p>
                 </div>
 
-                <div className="nameField">
-                    <p className="label">User Name:</p>
-                    <p className="value" id="userName">
+                <div className="cards">
+                    <p id="userName">
                         {loading
                             ? "Loading data..."
                             : data
@@ -177,11 +181,7 @@ function Profile() {
                 <button className="buttonDefaultStyle" onClick={handleSaveClick}>
                     Save
                 </button>
-
             </div>
-            
-
-
         </div>
     );
 }

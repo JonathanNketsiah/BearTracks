@@ -1,15 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { NavLink } from "react-router-dom";
 import "./css/LoginFront.css";
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import FilledInput from '@mui/material/FilledInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Alert from '@mui/material/Alert';
 //import bcrypt from 'bcryptjs';
 
 const SignUp = () => {
@@ -20,16 +11,7 @@ const SignUp = () => {
   const _passwordScn = useRef(null);
 
   const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-    const [success, setSuccessMessage] = useState(null);
-    const [error, ShowError] = useState(null);
-    const [showPassword, setShowPassword] = React.useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+  const passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
   const handleSignUp = async (event) => {
     event.preventDefault();
 
@@ -54,11 +36,8 @@ const SignUp = () => {
         }),
       });
       // Check if aacount creation was successful, then redirect if not
-        if (response.ok) {
-            const successNoti = response.ok;
-            setSuccessMessage(successNoti);
-           
-       // window.location.href = "/"; // replace with your actual landing page URL
+      if (response.ok) {
+        window.location.href = "/"; // replace with your actual landing page URL
       } else {
         console.error("Login Failed");
         // Handle your error here
@@ -69,12 +48,10 @@ const SignUp = () => {
     }
   };
 
-
-
   const emailRegex = () => {
     const email = _emailScn.current.value;
     if (email === "") {
-        ShowError();
+      alert("Please enter an email");
     } else if (!emailValidator.test(email)) {
       alert("invalid password");
     }
@@ -100,69 +77,42 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <div className="contWrap">
-          <form className="input-wrapper" onSubmit={handleSignUp}>
-              <h2 className="my-text">Sign Up</h2>
+      <h2 className="my-text">Sign Up</h2>
 
-       <TextField id="filled-basic" label="First Name" variant="filled" inputRef={_firstNameScn} margin="normal" />
-       <TextField id="filled-basic" label="Last Name" variant="filled" inputRef={_lastNameScn} margin="normal" />
-       <TextField id="filled-basic" label="User Name" variant="filled" inputRef={_userNameScn} margin="normal" />
-       <TextField id="filled-basic" label="Email" variant="filled" inputRef={_emailScn} margin="normal" />     
-              <FormControl margin="normal"  variant="filled">
-                  <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-                  <FilledInput
-                      id="filled-adornment-password"
-                      inputRef={_passwordScn}
-                      type={showPassword ? 'text' : 'password'}
-                      endAdornment={
-                          <InputAdornment position="end">
-                              <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                              >
-                                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
-                          </InputAdornment>
-                      }
-                  />
-              </FormControl>
-       
+      <form className="input-wrapper" onSubmit={handleSignUp}>
+        <label className="my-text">Enter First Name</label>
+        <input type="text" ref={_firstNameScn} placeholder="first name" />
+        <label className="my-text">Enter Last Name</label>
+        <input type="text" ref={_lastNameScn} placeholder="last name" />
+        <label className="my-test">Enter User Name</label>
+        <input type="text" ref={_userNameScn} placeholder="user name" />
+        <label className="my-test">Enter Email</label>
+        <input type="text" ref={_emailScn} placeholder="email" />
+        <label className="my-test">Enter Password</label>
+        <input
+          type="password"
+          ref={_passwordScn}
+          placeholder="password"
+          autoComplete="off"
+        />
         <button
           onClick={() => {
             emailRegex();
             passwordRegex();
-          
-
           }}
         >
           SignUp
-                  </button>
-                  {
-                      success && <div className="alert">
-                          <Alert variant="outlined" severity="success">
-                              Account successfully created ,log in!
-                          </Alert>
-                      </div>
-                  }
-
-
-                  {error && <div className="alert">   <Alert variant="outlined" severity="error">
-                     Email required
-                  </Alert></div> }
-              <div className="links-wrap">
-                  <NavLink to={"/"} className="navcolor">
-                      Already have an account? Login
-                  </NavLink>
-              </div>
+        </button>
       </form>
 
-          </div>
+      <div className="links-wrap">
+        <NavLink to={"/"} className="navcolor">
+          Already have an account? Login
+        </NavLink>
+      </div>
     </div>
   );
 };
 
 export default SignUp;
 //export { hashedPassword }
-
