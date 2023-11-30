@@ -9,6 +9,8 @@
     display: block;
     transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Add box shadow for normal state */
+    display:flex;
+    align-items:center;
   }
   
   .buttonDefaultStyle:active {
@@ -20,6 +22,7 @@
     background-color: rgb(127, 0, 255);
     color: #FFFFFF;
     border: none;
+    margin:10px;
     border-radius: 6px;
     padding: 10px 20px;
     cursor: pointer;
