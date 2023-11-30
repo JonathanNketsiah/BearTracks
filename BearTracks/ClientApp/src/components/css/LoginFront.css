@@ -1,35 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Bubbles&display=swap');
 
-/*
-  1. Use a more-intuitive box-sizing model.
-*/
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
 
-/*
-  2. Remove default margin
-*/
-* {
-    margin: 0;
-}
-
-/*
-  Typographic tweaks!
-  3. Add accessible line-height
-  4. Improve text rendering
-*/
-body {
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    background: rgb(245, 245, 245);
-}
-
-/*
-  5. Improve media defaults
-*/
 img,
 picture,
 video,
@@ -70,22 +41,30 @@ h6 {
     isolation: isolate;
 }
 
-body {
 
-    height: 100vh;
-
-}
 
 
 .container {
     height: 100vh;
+    width: 200vw;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 20px;
+    background-color: white;
+}
+
+.contWrap {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: rgb(127, 0, 255);
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 45px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    background: rgb(127, 0, 255);
 }
 
 .img {
@@ -96,7 +75,6 @@ body {
 }
 
 .container-img {
-
     align-items: center;
     display: flex;
     height: 180px;
@@ -109,32 +87,33 @@ body {
     height: 360px;
     width: 360px;
     margin-bottom: 0;
+    border-radius: 50px;
 }
 
 .my-text {
-    color: #ffffff;
+    color: black;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 1.2rem;
+    font-size: 2.0rem;
 }
 
 
-.container>h1 {
+.bearTitle {
     text-align: center;
     font-family: 'Rubik Bubbles', cursive;
     font-weight: 400;
     font-size: 2.5em;
     padding-bottom: 10px;
-    color: #ffffff;
+    color: goldenrod;
 }
 
-.container>h2 {
+.container > h2 {
     text-align: center;
     font-size: 2.0em;
     margin-top: 0;
 }
 
-.container>h3 {
+.container > h3 {
     text-align: center;
     font-family: 'Rubik Bubbles', cursive;
     font-weight: 400;
@@ -148,42 +127,37 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    background-color: white;
+    padding: 45px;
 }
 
-input[type=text],
-input[type=password] {
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
 
-.input-wrapper>button {
-    padding: 10px;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    margin-top: 10px;
-    background-color: #17cf97;
-    color: whitesmoke;
-}
 
-.input-wrapper>button:hover {
-    cursor: pointer;
-    background-color: #20b2aa;
-}
+    .input-wrapper > button {
+        padding: 10px;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        margin-top: 10px;
+        background-color: #17cf97;
+        color: whitesmoke;
+    }
+
+        .input-wrapper > button:hover {
+            cursor: pointer;
+            background-color: #20b2aa;
+        }
 
 .links-wrap {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: 15px;
-
 }
 
-.links-wrap>a:hover {
-    color: dodgerblue;
-
-}
+    .links-wrap > a:hover {
+        color: dodgerblue;
+    }
 
 .navcolor {
     color: cornflowerblue;
@@ -191,11 +165,7 @@ input[type=password] {
 
 @keyframes bounce {
 
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
+    0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
     }
 
@@ -218,44 +188,44 @@ input[type=password] {
     margin: 10px;
 }
 
-.content-container .input-container {
-    display: flex;
-    align-items: center;
-}
+    .content-container .input-container {
+        display: flex;
+        align-items: center;
+    }
 
-.content-container input {
-    flex: 1;
-    border-radius: 10px;
-    padding: 10px 20px;
-    margin: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
+    .content-container input {
+        flex: 1;
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.content-container button {
-    background: rgb(119, 44, 232);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    margin: 5px;
-    cursor: pointer;
-}
+    .content-container button {
+        background: rgb(119, 44, 232);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+    }
 
-.content-container h2 {
-    margin-top: 20px;
-}
+    .content-container h2 {
+        margin-top: 20px;
+    }
 
-.content-container ul {
-    list-style-type: none;
-    padding: 0;
-    max-height: 400px;
-    overflow-y: scroll;
-}
+    .content-container ul {
+        list-style-type: none;
+        padding: 0;
+        max-height: 400px;
+        overflow-y: scroll;
+    }
 
-.content-container hr {
-    border: 2px solid purple;
-    margin: 20px 0;
-}
+    .content-container hr {
+        border: 2px solid purple;
+        margin: 20px 0;
+    }
 
 
 .primaryCont {
@@ -267,29 +237,7 @@ input[type=password] {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.profileContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-}
 
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.cards {
-    flex: 0 0 calc(40% - 20px);
-    max-width: calc(40% - 20px);
-    width: 100%;
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
-}
 
 .profileTitle {
     text-align: center;
@@ -349,4 +297,39 @@ input[type=password] {
 .textDoc {
     display: flex;
     flex-direction: column;
+}
+
+.alert {
+    padding-top: 2px;
+}
+
+
+
+.space {
+    margin-right: 5px;
+}
+
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.nameField {
+    margin: 2px;
+    text-align: center;
+    display: flex; /* Display children in a row */
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 5px; /* Add some margin between label and value */
+}
+
+.value {
+    margin-left: 2px; /* Add some margin between label and value */
 }
