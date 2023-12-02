@@ -240,100 +240,100 @@ function MapPage() {
           </div>
           <div style={buttonContainerStyle}>
             <button onClick={handleSearch} style={{ ...buttonStyle }}>
-              Search
+              Search Address
             </button>
             <button onClick={handleGeolocationClick} style={{ ...buttonStyle }}>
-              AutoLocate
+              Find Me
             </button>
           </div>
           <hr></hr>
-            <div>
-                <ul className="nav-bar">
-                <li
-                    onClick={() => handleOptionChange("option1")}
-                    className={selectedOption === "option1" ? "selected" : ""}
-                >
-                    BearTracks Events
-                </li>
-                <li
-                    onClick={() => handleOptionChange("option2")}
-                    className={selectedOption === "option2" ? "selected" : ""}
-                >
-                    SeatGeek Events
-                </li>
-                <li
-                    onClick={() => handleOptionChange("option3")}
-                    className={selectedOption === "option3" ? "selected" : ""}
-                >
-                    Places of Interest
-                </li>
-                </ul>
-                <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-                >
-                <button style={buttonStyle} onClick={toggleModal}>
-                    Create Event
-                </button>
-                <EventFormModal show={showModal} handleClose={toggleModal} />
-                </div>
-            </div>
+          <div>
+            <ul className="nav-bar">
+              <li
+                onClick={() => handleOptionChange("option1")}
+                className={selectedOption === "option1" ? "selected" : ""}
+              >
+                BearTracks Events
+              </li>
+              <li
+                onClick={() => handleOptionChange("option2")}
+                className={selectedOption === "option2" ? "selected" : ""}
+              >
+                SeatGeek Events
+              </li>
+              <li
+                onClick={() => handleOptionChange("option3")}
+                className={selectedOption === "option3" ? "selected" : ""}
+              >
+                Places of Interest
+              </li>
+            </ul>
             <div
-                style={{
-                marginTop: "20px",
-                display: locationInputted ? "block" : "none",
-                maxHeight: "calc(100vh - 150px)",
-                }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-                {/* Render content based on the selected option */}
-                {selectedOption === "option1" && (
-                <div className="scrollable-content">
-                    <h3
-                    // style={{
-                    //     fontFamily: "Times New Roman, serif",
-                    //     lineHeight: "1.4",
-                    //     fontStyle: "italic",
-                    //     textDecoration: "none", // Remove the underline
-                    //     textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)", // Add a light text shadow
-                    //     //boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
-                    // }}
+              <button style={buttonStyle} onClick={toggleModal}>
+                Create Event
+              </button>
+              <EventFormModal show={showModal} handleClose={toggleModal} />
+            </div>
+          </div>
+          <div
+            style={{
+              marginTop: "20px",
+              display: locationInputted ? "block" : "none",
+              maxHeight: "calc(100vh - 150px)",
+            }}
+          >
+            {/* Render content based on the selected option */}
+            {selectedOption === "option1" && (
+              <div className="scrollable-content">
+                <h3
+                  style={{
+                    fontFamily: "Times New Roman, serif",
+                    lineHeight: "1.4",
+                    fontStyle: "italic",
+                    textDecoration: "none", // Remove the underline
+                    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)", // Add a light text shadow
+                    //boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  BearTracks Events
+                </h3>
+                <ul style={{ listStyleType: "none", padding: 0 }}>
+                  {events.map((event, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        marginLeft: "20px",
+                        marginBottom: "10px",
+                        borderBottom: "1px solid #ccc",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setSelectedListEvent(event)}
                     >
-                    BearTracks Events
-                    </h3>
-                    <ul style={{ listStyleType: "none", padding: 0 }}>
-                    {events.map((event, index) => (
-                        <li
-                        key={index}
-                        style={{
-                            marginLeft: "20px",
-                            marginBottom: "10px",
-                            borderBottom: "1px solid #ccc",
-                            cursor: "pointer",
-                        }}
-                        onClick={() => setSelectedListEvent(event)}
-                        >
-                        <h4>{event.name}</h4>
-                        <p>{event.location}</p>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
-                )}
-                {selectedOption === "option2" && (
-                <div className="scrollable-content">
-                    <SeatGeekEvents
-                    userLocation={userLocation}
-                    setEventsOnMap={setEventsOnMap}
-                    />
-                </div>
-                )}
-                {selectedOption === "option3" && <div></div>}
-            </div>
-            </div>
+                      <h4>{event.name}</h4>
+                      <p>{event.location}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {selectedOption === "option2" && (
+              <div className="scrollable-content">
+                <SeatGeekEvents
+                  userLocation={userLocation}
+                  setEventsOnMap={setEventsOnMap}
+                />
+              </div>
+            )}
+            {selectedOption === "option3" && <div></div>}
+          </div>
+        </div>
       </div>
 
       {/* Begin Right Column */}
@@ -355,7 +355,8 @@ function MapPage() {
                 style={{
                   width: "25%",
                   height: "25%",
-                  animation: "bounce 2s infinite",
+                  animation:
+                    "fade 20s cubic-bezier(0.645, 0.045, 0.355, 1) infinite, bounce 2s infinite",
                 }}
               />
               <p
