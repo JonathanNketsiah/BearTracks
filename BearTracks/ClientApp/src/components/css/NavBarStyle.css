@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Bubbles&display=swap');
 
 .active {
-    background-color: seagreen;
+    background-color: #00BF80;
 }
 
 nav {
@@ -32,9 +32,9 @@ nav {
     border-radius: 0.7rem;
 }
 
-    .title:not(.active):hover {
-        background-color: lightseagreen;
-    }
+.title:not(.active):hover {
+    background-color: lightseagreen;
+}
 
 
 
@@ -45,39 +45,39 @@ nav {
     justify-content: center;
 }
 
-    #navbar li {
-        list-style: none;
-        padding: 0 20px;
-        position: relative;
-    }
+#navbar li {
+    list-style: none;
+    padding: 0 20px;
+    position: relative;
+}
 
 
 
-        #navbar li .link {
-            text-decoration: none;
-            font-size: 1.6rem;
-            font-weight: bold;
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
-            border-radius: 0.7rem;
-            display: block;
-            padding: 0.4rem;
-            margin: 0 0.4rem;
-        }
+#navbar li .link {
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    border-radius: 0.7rem;
+    display: block;
+    padding: 0.4rem;
+    margin: 0 0.4rem;
+}
 
-            #navbar li .link:not(.active):hover {
-                background-color: lightseagreen;
-            }
+#navbar li .link:not(.active):hover {
+    background-color: lightseagreen;
+}
 
 
-    #navbar button {
-        border: none;
-        outline: none;
-        border-radius: 10px;
-        background-color: seagreen;
-        color: whitesmoke;
-    }
+#navbar button {
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    background-color: seagreen;
+    color: whitesmoke;
+}
 
-    #navbar .button:hover {
-        cursor: pointer;
-    }
+#navbar .button:hover {
+    cursor: pointer;
+}
