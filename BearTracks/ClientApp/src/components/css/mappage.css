@@ -19,3 +19,19 @@
       background-color: #f0f0f0;
     }
   }
+
+  .nav-bar {
+    font-size: medium;
+}
+
+.nav-bar li {
+    background-color: seagreen;
+    color: whitesmoke; /* Set the default background color */
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+  }
+  
+  /* Styling for list items on hover */
+  .nav-bar li:hover {
+    color: #fff; /* Set the text color on hover */
+    background-color: #00BF80; /* Set the background color on hover */
+  }

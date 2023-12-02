@@ -11,8 +11,7 @@ import SeatGeekEvents from "./SeatGeekEvents";
 import seatgeekIcon from "./Assets/seatgeek-marker.png";
 import logo from "./Assets/logo.png";
 import EventFormModal from "./CreateEvent.js";
-import "./css/mappage.css";
-
+import "./css/mapPage.css";
 const center = {
   lat: 0,
   lng: 0,
@@ -152,25 +151,24 @@ function MapPage() {
   const listStyle = {
     width: "25%",
     height: "75%",
-    background: "lightpurple",
+    background: "white",
     borderRadius: "10px",
     padding: "10px",
     boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
     margin: "10px",
-    background: "white",
   };
 
   const mapStyle = {
-    width: "75%",
-    background: "lightpurple",
+    width: "67%",
+    background: "#00BF80",
     borderRadius: "10px",
     boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
-    margin: "10px",
-    background: "white",
+    marginLeft: "30px",
+    marginTop: "50px",
     padding: "1%",
   };
   const mapInnerContainerStyle = {
-    height: "75%",
+    height: "70%",
     borderRadius: "20px",
     overflow: "hidden",
   };
@@ -204,7 +202,7 @@ function MapPage() {
 
   const buttonStyle = {
     width: "auto", // Set width to auto
-    background: "#772ce8",
+    background: "rgb(127, 0, 255)",
     color: "white",
     border: "none",
     borderRadius: "20px",
@@ -249,93 +247,93 @@ function MapPage() {
             </button>
           </div>
           <hr></hr>
-          <div>
-            <ul className="nav-bar">
-              <li
-                onClick={() => handleOptionChange("option1")}
-                className={selectedOption === "option1" ? "selected" : ""}
-              >
-                BearTracks Events
-              </li>
-              <li
-                onClick={() => handleOptionChange("option2")}
-                className={selectedOption === "option2" ? "selected" : ""}
-              >
-                SeatGeek Events
-              </li>
-              <li
-                onClick={() => handleOptionChange("option3")}
-                className={selectedOption === "option3" ? "selected" : ""}
-              >
-                Places of Interest
-              </li>
-            </ul>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <button style={buttonStyle} onClick={toggleModal}>
-                Create Event
-              </button>
-              <EventFormModal show={showModal} handleClose={toggleModal} />
-            </div>
-          </div>
-          <div
-            style={{
-              marginTop: "20px",
-              display: locationInputted ? "block" : "none",
-              maxHeight: "calc(100vh - 150px)",
-            }}
-          >
-            {/* Render content based on the selected option */}
-            {selectedOption === "option1" && (
-              <div className="scrollable-content">
-                <h3
-                  style={{
-                    fontFamily: "Times New Roman, serif",
-                    lineHeight: "1.4",
-                    fontStyle: "italic",
-                    textDecoration: "none", // Remove the underline
-                    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)", // Add a light text shadow
-                    boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
-                  }}
+            <div>
+                <ul className="nav-bar">
+                <li
+                    onClick={() => handleOptionChange("option1")}
+                    className={selectedOption === "option1" ? "selected" : ""}
                 >
-                  BearTracks Events
-                </h3>
-                <ul style={{ listStyleType: "none", padding: 0 }}>
-                  {events.map((event, index) => (
-                    <li
-                      key={index}
-                      style={{
-                        marginLeft: "20px",
-                        marginBottom: "10px",
-                        borderBottom: "1px solid #ccc",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setSelectedListEvent(event)}
-                    >
-                      <h4>{event.name}</h4>
-                      <p>{event.location}</p>
-                    </li>
-                  ))}
+                    BearTracks Events
+                </li>
+                <li
+                    onClick={() => handleOptionChange("option2")}
+                    className={selectedOption === "option2" ? "selected" : ""}
+                >
+                    SeatGeek Events
+                </li>
+                <li
+                    onClick={() => handleOptionChange("option3")}
+                    className={selectedOption === "option3" ? "selected" : ""}
+                >
+                    Places of Interest
+                </li>
                 </ul>
-              </div>
-            )}
-            {selectedOption === "option2" && (
-              <div className="scrollable-content">
-                <SeatGeekEvents
-                  userLocation={userLocation}
-                  setEventsOnMap={setEventsOnMap}
-                />
-              </div>
-            )}
-            {selectedOption === "option3" && <div></div>}
-          </div>
-        </div>
+                <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+                >
+                <button style={buttonStyle} onClick={toggleModal}>
+                    Create Event
+                </button>
+                <EventFormModal show={showModal} handleClose={toggleModal} />
+                </div>
+            </div>
+            <div
+                style={{
+                marginTop: "20px",
+                display: locationInputted ? "block" : "none",
+                maxHeight: "calc(100vh - 150px)",
+                }}
+            >
+                {/* Render content based on the selected option */}
+                {selectedOption === "option1" && (
+                <div className="scrollable-content">
+                    <h3
+                    // style={{
+                    //     fontFamily: "Times New Roman, serif",
+                    //     lineHeight: "1.4",
+                    //     fontStyle: "italic",
+                    //     textDecoration: "none", // Remove the underline
+                    //     textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)", // Add a light text shadow
+                    //     //boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
+                    // }}
+                    >
+                    BearTracks Events
+                    </h3>
+                    <ul style={{ listStyleType: "none", padding: 0 }}>
+                    {events.map((event, index) => (
+                        <li
+                        key={index}
+                        style={{
+                            marginLeft: "20px",
+                            marginBottom: "10px",
+                            borderBottom: "1px solid #ccc",
+                            cursor: "pointer",
+                        }}
+                        onClick={() => setSelectedListEvent(event)}
+                        >
+                        <h4>{event.name}</h4>
+                        <p>{event.location}</p>
+                        </li>
+                    ))}
+                    </ul>
+                </div>
+                )}
+                {selectedOption === "option2" && (
+                <div className="scrollable-content">
+                    <SeatGeekEvents
+                    userLocation={userLocation}
+                    setEventsOnMap={setEventsOnMap}
+                    />
+                </div>
+                )}
+                {selectedOption === "option3" && <div></div>}
+            </div>
+            </div>
       </div>
 
       {/* Begin Right Column */}
