@@ -1,5 +1,6 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
 using BearTracks.CoreLibrary.Databases.MongoObjects;
+using BearTracks.CoreLibrary.Models.Events;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace BearTracks.CoreLibrary.Databases
                     {
                         FirstName = cModel.FirstName,
                         LastName = cModel.LastName,
-                        Email = cModel.Email,
+                        Email = cModel.Email.ToLower(),
                         UserName = cModel.UserName,
                         PasswordHash = passwordHash,
                         SALT = Convert.ToBase64String(salt),
@@ -84,7 +85,7 @@ namespace BearTracks.CoreLibrary.Databases
                 
                 // Create a filter to select the document
                 var filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("Email", lModel.Email)); // Filter by Email value
+                    Builders<BsonDocument>.Filter.Eq("Email", lModel.Email.ToLower())); // Filter by Email value
                 
                 try
                 {
@@ -192,6 +193,16 @@ namespace BearTracks.CoreLibrary.Databases
             var updatePhotoResult = photoCollection.UpdateOne(photoFilter, updatePhoto);
 
             return updateResult.ModifiedCount == 1 ? new OkResult() : new NotFoundResult();
+        }
+
+        public IActionResult CreateEvent(CreateEventDTO uModel)
+        {
+            return new OkResult();
+        }
+
+        public IActionResult GetEvents()
+        {
+            return new OkResult();
         }
     }
 }

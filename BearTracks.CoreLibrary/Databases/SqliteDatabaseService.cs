@@ -1,5 +1,6 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
 using BearTracks.CoreLibrary.Databases.MongoObjects;
+using BearTracks.CoreLibrary.Models.Events;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +61,7 @@ namespace BearTracks.CoreLibrary.Databases
                     connection.Open();
                     using (var command = new SQLiteCommand(query, connection))
                     {
-                        command.Parameters.Add(new SQLiteParameter("@email", lModel.Email));
+                        command.Parameters.Add(new SQLiteParameter("@email", lModel.Email.ToLower()));
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -111,7 +112,7 @@ namespace BearTracks.CoreLibrary.Databases
                         //Add the parameters below provides rudimentary screening for things like sql injection
                         command.Parameters.Add(new SQLiteParameter("@firstname", cModel.FirstName));
                         command.Parameters.Add(new SQLiteParameter("@lastname", cModel.LastName));
-                        command.Parameters.Add(new SQLiteParameter("@email", cModel.Email));
+                        command.Parameters.Add(new SQLiteParameter("@email", cModel.Email.ToLower()));
                         command.Parameters.Add(new SQLiteParameter("@username", cModel.UserName));
                         command.Parameters.Add(new SQLiteParameter("@passwordHash", passwordHash));
                         command.Parameters.Add(new SQLiteParameter("@salt", Convert.ToBase64String(salt)));
@@ -270,6 +271,16 @@ namespace BearTracks.CoreLibrary.Databases
                 return new NotFoundResult();
             }
             return new NotFoundResult();
+        }
+
+        public IActionResult CreateEvent(CreateEventDTO uModel)
+        {
+            return new OkResult();
+        }
+
+        public IActionResult GetEvents()
+        {
+            return new OkResult();
         }
     }
 }

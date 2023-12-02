@@ -22,23 +22,30 @@ namespace BearTracks.CoreLibrary.Databases
         
         public string HashPassword(string password, byte[] salt)
         {
-            // Create the password hash
-            var derivedByted = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256);
-            byte[] hash = derivedByted.GetBytes(32); // 32 bytes for a 256-bit key
+            try
+            {
+                // Create the password hash
+                var derivedByted = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256);
+                byte[] hash = derivedByted.GetBytes(32); // 32 bytes for a 256-bit key
 
-            // Combine the salt and hash for storage
-            byte[] hashBytes = new byte[48]; // 16 bytes for salt + 32 bytes for hash
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 32);
+                // Combine the salt and hash for storage
+                byte[] hashBytes = new byte[48]; // 16 bytes for salt + 32 bytes for hash
+                Array.Copy(salt, 0, hashBytes, 0, 16);
+                Array.Copy(hash, 0, hashBytes, 16, 32);
 
-            string savedPasswordHash = Convert.ToBase64String(hashBytes);
-            
-            // To verify a password, you would do the following:
-            // 1. Retrieve the salt and hash from storage
-            // 2. Compute the hash of the input password with the retrieved salt
-            // 3. Compare the computed hash with the stored hash
+                string savedPasswordHash = Convert.ToBase64String(hashBytes);
 
-            return savedPasswordHash;
+                // To verify a password, you would do the following:
+                // 1. Retrieve the salt and hash from storage
+                // 2. Compute the hash of the input password with the retrieved salt
+                // 3. Compare the computed hash with the stored hash
+
+                return savedPasswordHash;
+            }
+            catch 
+            { 
+                return null;
+            }
         }
     }    
 }

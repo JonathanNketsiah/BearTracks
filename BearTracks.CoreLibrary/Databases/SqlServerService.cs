@@ -1,20 +1,23 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
 using BearTracks.CoreLibrary.Databases.MongoObjects;
+using BearTracks.CoreLibrary.Models.Events;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace BearTracks.CoreLibrary.Databases
 {
     public class SqlServerDatabaseService : IDatabaseService
     {
-        private readonly string[] TABLE_NAME = { "users", "accountPhotos" };
+        private readonly string[] TABLE_NAME = { "users", "accountPhotos", "events" };
         private Regex _regex = new Regex(Constants.EMAIL_REGEX);
         private readonly string _connectionString;
         private IDbSecurityService _security_svc;
+        private static bool _initialized = false;
 
         public SqlServerDatabaseService(string? connectionString, IDbSecurityService sec_svc)
         {
@@ -26,19 +29,28 @@ namespace BearTracks.CoreLibrary.Databases
 
         public void Setup()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            if (!_initialized)
             {
-                connection.Open();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
 
-                var sql = $"IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TABLE_NAME[0]}') " +
-                    $"BEGIN CREATE TABLE { TABLE_NAME[0]} (firstname varchar(50), lastname varchar(50), email varchar(50), username varchar(50), passwordHash varchar(max), salt varchar(max)) END;";
+                    var sql = $"IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TABLE_NAME[0]}') " +
+                        $"BEGIN CREATE TABLE {TABLE_NAME[0]} (firstname varchar(50), lastname varchar(50), email varchar(50), username varchar(50), passwordHash varchar(max), salt varchar(max)) END;";
 
-                var command = new SqlCommand(sql, connection);
-                command.ExecuteNonQuery();
+                    var command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
 
-                sql = $"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TABLE_NAME[1]}') BEGIN    CREATE TABLE accountPhotos (email varchar(50), accountPhoto varchar(max)); END;";
-                command = new SqlCommand(sql, connection);
-                command.ExecuteNonQuery();
+                    sql = $"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TABLE_NAME[1]}') BEGIN    CREATE TABLE {TABLE_NAME[1]} (email varchar(50), accountPhoto varchar(max)); END;";
+                    command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+
+                        sql = $"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{TABLE_NAME[2]}') BEGIN    CREATE TABLE {TABLE_NAME[2]} (Id INT PRIMARY KEY IDENTITY(1,1), Name NVARCHAR(MAX), Location NVARCHAR(MAX), Latitude DECIMAL(18, 10), Longitude DECIMAL(18, 10), Description NVARCHAR(MAX)); END;";
+                    command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+                }
+
+                _initialized = true;
             }
         }
 
@@ -53,7 +65,7 @@ namespace BearTracks.CoreLibrary.Databases
                 connection.Open();
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.Add(new SqlParameter("@email", lModel.Email));
+                    command.Parameters.Add(new SqlParameter("@email", lModel.Email.ToLower()));
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -94,7 +106,7 @@ namespace BearTracks.CoreLibrary.Databases
                 {
                     command.Parameters.Add(new SqlParameter("@firstname", cModel.FirstName));
                     command.Parameters.Add(new SqlParameter("@lastname", cModel.LastName));
-                    command.Parameters.Add(new SqlParameter("@email", cModel.Email));
+                    command.Parameters.Add(new SqlParameter("@email", cModel.Email.ToLower()));
                     command.Parameters.Add(new SqlParameter("@username", cModel.UserName));
                     command.Parameters.Add(new SqlParameter("@passwordHash", passwordHash));
                     command.Parameters.Add(new SqlParameter("@salt", Convert.ToBase64String(salt)));
@@ -245,5 +257,69 @@ namespace BearTracks.CoreLibrary.Databases
             return new NotFoundResult();
         }
 
+        public IActionResult CreateEvent(CreateEventDTO ceModel)
+        {
+            if (ceModel != null)
+            {
+                int insertedRows = 0;
+                
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    string query = $"INSERT INTO {TABLE_NAME[2]} (name, description, location, longitude, latitude) " +
+                        $"VALUES (@name, @description, @location, @longitude, @latitude);";
+
+                    connection.Open();
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@name", ceModel.name));
+                        command.Parameters.Add(new SqlParameter("@description", ceModel.description));
+                        command.Parameters.Add(new SqlParameter("@location", ceModel.location));
+                        command.Parameters.Add(new SqlParameter("@longitude", ceModel.longitude));
+                        command.Parameters.Add(new SqlParameter("@latitude", ceModel.latitude));
+
+                        insertedRows = command.ExecuteNonQuery();
+                        Console.WriteLine($"Rows Updated: {insertedRows}");
+                    }
+                }
+                return insertedRows == 1 ? new OkResult() : new NotFoundResult();
+            }
+            else return new NotFoundResult();
+        }
+
+        public IActionResult GetEvents()
+        {
+
+            List<CreateEventDTO> eventList = new List<CreateEventDTO>();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = $"SELECT * FROM {TABLE_NAME[2]};";
+
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CreateEventDTO eventDTO = new CreateEventDTO
+                            {
+                                name = reader["Name"] != DBNull.Value ? (string)reader["Name"] : null,
+                                location = reader["Location"] != DBNull.Value ? (string)reader["Location"] : null,
+                                latitude = reader["Latitude"] != DBNull.Value ? (decimal?)reader["Latitude"] : null,
+                                longitude = reader["Longitude"] != DBNull.Value ? (decimal?)reader["Longitude"] : null,
+                                description = reader["Description"] != DBNull.Value ? (string)reader["Description"] : null,
+                            };
+
+                            eventList.Add(eventDTO);
+                        }
+                    }
+                }
+            }
+
+            if (eventList.Count > 0) {
+                return new OkObjectResult(JsonSerializer.Serialize(eventList));
+            }
+            else return new NotFoundResult();
+        }
     }
 }
