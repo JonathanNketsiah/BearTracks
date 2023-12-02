@@ -1,4 +1,5 @@
-﻿using BearTracks.CoreLibrary.Models.UserAccount;
+﻿using BearTracks.CoreLibrary.Models.Events;
+using BearTracks.CoreLibrary.Models.UserAccount;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BearTracks.CoreLibrary.Databases.Interfaces
@@ -11,5 +12,7 @@ namespace BearTracks.CoreLibrary.Databases.Interfaces
         IActionResult DeleteUser(DeleteUserDTO delModel);
         IActionResult RetrieveUser(string email);
         IActionResult UpdateUser(UpdateModelDTO uModel);
+        IActionResult CreateEvent(CreateEventDTO ceModel);
+        IActionResult GetEvents();
     }
 }

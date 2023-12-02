@@ -1,0 +1,9 @@
+#app-container {
+    padding-top: 60px; /* Adjust the value based on your navbar height */
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden; /* Disable both horizontal and vertical scrollbars */
+}

@@ -107,7 +107,7 @@ function Profile() {
             }, 300);
         } catch { }
 
-        const emailValue = document.getElementById("email").innerText;
+        const emailValue = document.getElementById("email").innerText.toLowerCase;
         const userNameValue = document.getElementById("userName").innerText;
 
         if (emailValue && userNameValue) {
