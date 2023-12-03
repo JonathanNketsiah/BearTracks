@@ -99,7 +99,7 @@ const SignUp = () => {
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ marginTop: "-65px", backgroundColor: "rgba(255, 255, 255, 0)"}}>
             <div className="contWrap">
                 <form className="input-wrapper" onSubmit={handleSignUp}>
                     <h2 className="my-text">Sign Up</h2>
