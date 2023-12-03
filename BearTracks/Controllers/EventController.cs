@@ -29,10 +29,10 @@ namespace BearTracks.Controllers
         }
 
         [HttpPost("get")]
-        public IActionResult? Get()
+        public IActionResult? Get([FromBody] GetEventsDTO geModel)
         {
             if (_handler != null)
-                return _handler.GetEvents();
+                return _handler.GetEvents(geModel.Pos);
             else
                 return null;
         }

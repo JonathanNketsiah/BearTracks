@@ -16,7 +16,7 @@ const Social = () => {
     return (
         <>
 
-            <div className="socialContainer">
+            <div className="socialContainer" style={{ marginTop: "60px" }}>
                 <h2>Friend's List</h2>
                 <div className="socialCards">
                     <div className="pborder">
@@ -25,7 +25,7 @@ const Social = () => {
                     <div className="contents">
                         <div className="textDoc">
                             <h5>Jane lane</h5>
-                            <label>Interest: Soccer,Bowling , Fahsion</label>
+                            <label>Interest: Soccer, Bowling ,Fashion</label>
                             <label> Recent visit: SCAD Musuem</label>
                         </div>
                     </div>

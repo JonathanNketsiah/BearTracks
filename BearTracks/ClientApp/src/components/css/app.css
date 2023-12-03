@@ -6,4 +6,7 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     overflow: hidden; /* Disable both horizontal and vertical scrollbars */
+    background-image: url('../Assets/tracks.jpg');
+    background-position: center; /* This property centers the background image */
+    background-repeat: repeat; 
 }
