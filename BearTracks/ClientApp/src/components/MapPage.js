@@ -47,6 +47,7 @@ function MapPage() {
           lng: position.coords.longitude,
         });
         setLocationInputted(true);
+        getBearTracksEvents();
       });
     } else {
       alert("Geolocation is not supported by your browser.");
@@ -56,17 +57,92 @@ function MapPage() {
   useEffect(() => {
     if (userLocation) {
       setMapLogoVisible(false);
-      getBearTracksEvents();
     }
   }, [userLocation]);
 
   async function getBearTracksEvents() {
     try {
+      // Use a Promise to get the geolocation position asynchronously
+      const getPosition = () => {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+      };
+
+      // Wait for the geolocation position
+      const position = await getPosition();
+
+      // Now, you can use the obtained position in your fetch request
       const response = await fetch("event/get", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          email: "example@email.com", // replace with your actual email or any other data you want to send,
+          pos: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Filter out events with invalid coordinates
+        const convertedEvents = data.map((event) => {
+          const convertedEvent = { ...event }; // Create a copy of the event object
+
+          // Convert latitude to a number
+          if (typeof convertedEvent.latitude === "string") {
+            convertedEvent.latitude = parseFloat(convertedEvent.latitude);
+          }
+
+          // Convert longitude to a number
+          if (typeof convertedEvent.longitude === "string") {
+            convertedEvent.longitude = parseFloat(convertedEvent.longitude);
+          }
+
+          // Check if the conversion is successful
+          if (
+            isNaN(convertedEvent.latitude) ||
+            isNaN(convertedEvent.longitude)
+          ) {
+            console.error(
+              "Invalid latitude or longitude values for event:",
+              convertedEvent
+            );
+            return null; // or handle the error in a way that suits your application
+          }
+
+          return convertedEvent;
+        });
+
+        setEvents(convertedEvents);
+        console.log("Event Created Successfully");
+      } else {
+        console.error("Event Creation Failed.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getCustomLocBearTracksEvents(lat, lng) {
+    try {
+      // Now, you can use the obtained position in your fetch request
+      const response = await fetch("event/get", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pos: {
+            lat: lat,
+            lng: lng,
+          },
+        }),
       });
 
       if (response.ok) {
@@ -124,6 +200,7 @@ function MapPage() {
           const location = data.results[0].geometry.location;
           setUserLocation({ lat: location.lat, lng: location.lng });
           setLocationInputted(true);
+          getCustomLocBearTracksEvents(location.lat, location.lng);
         } else {
           alert("Address not found. Please enter a valid address.");
         }
@@ -200,18 +277,6 @@ function MapPage() {
     boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
   };
 
-  const buttonStyle = {
-    width: "auto", // Set width to auto
-    background: "rgb(127, 0, 255)",
-    color: "white",
-    border: "none",
-    borderRadius: "20px",
-    padding: "10px 20px",
-    margin: "5px",
-    cursor: "pointer",
-    fontSize: "10pt", // Set font size to 12pt
-  };
-
   const navbarHeight = 40; // Set your actual navbar height
 
   return (
@@ -239,10 +304,10 @@ function MapPage() {
             />
           </div>
           <div style={buttonContainerStyle}>
-            <button onClick={handleSearch} style={{ ...buttonStyle }}>
+            <button onClick={handleSearch} className="buttonStyle">
               Search Address
             </button>
-            <button onClick={handleGeolocationClick} style={{ ...buttonStyle }}>
+            <button onClick={handleGeolocationClick} className="buttonStyle">
               Find Me
             </button>
           </div>
@@ -276,7 +341,7 @@ function MapPage() {
                 justifyContent: "center",
               }}
             >
-              <button style={buttonStyle} onClick={toggleModal}>
+              <button className="buttonStyle" onClick={toggleModal}>
                 Create Event
               </button>
               <EventFormModal show={showModal} handleClose={toggleModal} />

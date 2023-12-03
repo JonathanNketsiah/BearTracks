@@ -1,5 +1,6 @@
 ﻿using BearTracks.CoreLibrary.Databases.Interfaces;
 using BearTracks.CoreLibrary.Databases.MongoObjects;
+using BearTracks.CoreLibrary.Functions;
 using BearTracks.CoreLibrary.Models.Events;
 using BearTracks.CoreLibrary.Models.UserAccount;
 using BearTracks.CoreLibrary.Utility;
@@ -286,10 +287,14 @@ namespace BearTracks.CoreLibrary.Databases
             else return new NotFoundResult();
         }
 
-        public IActionResult GetEvents()
+        public IActionResult GetEvents(Position userPos)
         {
-
             List<CreateEventDTO> eventList = new List<CreateEventDTO>();
+
+            // Assuming you have the user's position from the request
+            double userLatitude = userPos.Lat;
+            double userLongitude = userPos.Lng;
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = $"SELECT * FROM {TABLE_NAME[2]};";
@@ -310,16 +315,31 @@ namespace BearTracks.CoreLibrary.Databases
                                 description = reader["Description"] != DBNull.Value ? (string)reader["Description"] : null,
                             };
 
-                            eventList.Add(eventDTO);
+                            // Calculate distance between the user and the event
+                            double eventDistance = MapCalc.CalculateDistance(userLatitude, userLongitude, (double)(eventDTO.latitude ?? 0), (double)(eventDTO.longitude ?? 0));
+
+                            // Assuming you have a maximum distance allowed for an event
+                            double maxDistance = 10.0; // Replace with your actual maximum distance
+
+                            // Include the event in the result only if it satisfies the distance condition
+                            if (eventDistance <= maxDistance)
+                            {
+                                eventList.Add(eventDTO);
+                            }
                         }
                     }
                 }
             }
 
-            if (eventList.Count > 0) {
+            if (eventList.Count > 0)
+            {
                 return new OkObjectResult(JsonSerializer.Serialize(eventList));
             }
-            else return new NotFoundResult();
+            else
+            {
+                return new NotFoundResult();
+            }
         }
+
     }
 }

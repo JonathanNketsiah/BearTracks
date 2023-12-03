@@ -200,7 +200,7 @@ namespace BearTracks.CoreLibrary.Databases
             return new OkResult();
         }
 
-        public IActionResult GetEvents()
+        public IActionResult GetEvents(Position userPos)
         {
             return new OkResult();
         }

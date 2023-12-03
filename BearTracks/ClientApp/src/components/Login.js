@@ -97,7 +97,7 @@ const Login = () => {
 
     return (
         <>
-            <div className="container" style={{ marginTop: "-60px" }}>
+            <div className="container" style={{ marginTop: "-60px", backgroundColor: "rgba(255, 255, 255, 0)"}}>
                 <div className="contWrap" style={{paddingTop: "-20px"}}>
                     <div className="img">
                         <div className="container-img">

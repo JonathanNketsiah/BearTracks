@@ -120,7 +120,7 @@ function Profile() {
     };
 
     return (
-        <div>
+        <div style={{ marginTop: "60px" }}>
             <h2 className="profileTitle">My Account</h2>
             <div className="profilePic">
                 {image || accountPhoto ? ( // Display the accountPhoto if available
