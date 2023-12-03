@@ -292,6 +292,7 @@ h6 {
     justify-content: space-around;
     display: flex;
     width: 35rem;
+    background-color: white;
 }
 
 .pborder {

@@ -13,6 +13,6 @@ namespace BearTracks.CoreLibrary.Databases.Interfaces
         IActionResult RetrieveUser(string email);
         IActionResult UpdateUser(UpdateModelDTO uModel);
         IActionResult CreateEvent(CreateEventDTO ceModel);
-        IActionResult GetEvents();
+        IActionResult GetEvents(Position geModel);
     }
 }
