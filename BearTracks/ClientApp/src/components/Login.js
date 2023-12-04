@@ -73,7 +73,7 @@ const Login = () => {
             ShowError(true);
 
         } else if (!emailValidator.test(email)) {
-            alert("invalid email");
+            //alert("invalid email");
         }
 
         // else {
@@ -87,7 +87,7 @@ const Login = () => {
         if (password === "") {
             ShowErrorPass(true)
         } else if (!passwordValidator.test(password)) {
-            alert("invalid password");
+            //alert("invalid password");
         }
 
         // else {
